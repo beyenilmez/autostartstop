@@ -1,0 +1,41 @@
+[versions]
+# Java
+java = "21"
+
+# Velocity
+velocity = "3.4.0-SNAPSHOT"
+
+# Libraries
+boostedYaml = "1.3.7"
+ampapi = "2620.4.0"
+result4j = "1.2.0"
+cronUtils = "9.2.1"
+gson = "2.13.2"
+bstats = "3.1.0"
+
+# Plugins
+shadow = "9.3.1"
+
+[libraries]
+# Velocity API
+velocity-api = { group = "com.velocitypowered", name = "velocity-api", version.ref = "velocity" }
+
+# Configuration
+boosted-yaml = { group = "dev.dejvokep", name = "boosted-yaml", version.ref = "boostedYaml" }
+
+# AMP API
+ampapi = { group = "dev.neuralnexus", name = "ampapi", version.ref = "ampapi" }
+result4j = { group = "com.github.sviperll", name = "result4j", version.ref = "result4j" }
+
+# Utilities
+cron-utils = { group = "com.cronutils", name = "cron-utils", version.ref = "cronUtils" }
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+
+# Metrics
+bstats-velocity = { group = "org.bstats", name = "bstats-velocity", version.ref = "bstats" }
+
+[bundles]
+amp = ["ampapi", "result4j"]
+
+[plugins]
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }

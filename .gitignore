@@ -1,0 +1,79 @@
+# IDE - IntelliJ
+.idea/
+.idea_modules/
+*.iml
+*.ipr
+*.iws
+out/
+atlassian-ide-plugin.xml
+
+# Java
+*.class
+*.log
+*.ctxt
+hs_err_pid*
+
+# Archives
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Gradle
+.gradle
+build/
+**/build/
+gradle-app.setting
+.gradletasknamecache
+!gradle-wrapper.jar
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# Project
+run/
+runs/
+.cache
+modrinth_token.txt
+hangar_api_key.txt

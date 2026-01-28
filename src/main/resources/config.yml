@@ -1,0 +1,238 @@
+# ============================================================================
+# AutoStartStop Configuration
+# For detailed documentation, visit: https://beyenilmez.github.io/autostartstop
+# ============================================================================
+
+# Configuration file version. Do not modify.
+version: 1
+
+# ============================================================================
+# SETTINGS
+# ============================================================================
+# Global settings for the plugin.
+settings:
+  # Maximum time to wait for pending actions to complete during proxy shutdown
+  shutdown_timeout: 30s
+  # Interval for checking if servers are empty (for empty_server trigger)
+  # This catches servers that started without any player activity
+  # Set to 0 to disable periodic empty server check
+  empty_server_check_interval: 5m
+  # Interval for caching MOTD responses for virtual hosts (for respond_ping action)
+  # Set to 0 to disable periodic MOTD caching
+  motd_cache_interval: 15m
+
+# ============================================================================
+# DEFAULTS
+# ============================================================================
+# Global defaults for server configurations.
+# These values are merged with individual server configs.
+defaults:
+  server:
+    # Default control API configuration
+    control_api:
+      type: 'shell' # 'shell' | 'amp' | 'pterodactyl'
+    # Ping settings for checking server status
+    ping:
+      # Timeout for ping operations
+      timeout: 30s
+      # Method used to check if server is online: 'velocity' or 'control_api'
+      # - velocity: Uses Velocity's built-in ping (default, works with all servers)
+      # - control_api: Uses the control API to check status (not supported by Shell)
+      #                Falls back to 'velocity' if control API doesn't support ping
+      method: velocity
+    # Startup timer settings for tracking server startup progress
+    startup_timer:
+      # Expected startup time for progress calculations (default: 30s)
+      expected_startup_time: 30s
+      # Auto-calculate expected startup time from historical data
+      auto_calculate_expected_startup_time: true
+
+# ============================================================================
+# SERVERS
+# ============================================================================
+# Define servers that this plugin can manage.
+# Each server must also be registered in Velocity's velocity.toml.
+# 
+# The plugin can ONLY operate on servers defined in this section.
+#
+# For detailed server configuration options, see:
+# https://beyenilmez.github.io/autostartstop/configuration/servers
+#
+# For control API setup (Shell, AMP, Pterodactyl), see:
+# https://beyenilmez.github.io/autostartstop/control-api
+servers:
+
+# Example Shell Server
+#  survival: # Should be the same name defined in the velocity.toml
+#    virtual_host: play.example.com # Optional, only used by ping trigger and respond_ping action
+#    control_api:
+#      type: 'shell'
+#      start_command: './start.sh' # Optional, needed for start action
+#      stop_command: './stop.sh' # Optional, needed for stop action
+#      restart_command: './restart.sh' # Optional, needed for restart action
+#      send_command_command: './send.sh "${command}"' # Optional, needed for send_command action
+#      working_directory: '/path/to/server' # Optional, defaults to current directory
+#      command_timeout: 60s # Optional, defaults to 60 seconds
+#      environment: # Optional
+#        JAVA_HOME: '/usr/lib/jvm/java-17'
+#        SERVER_NAME: 'survival'
+
+# Example AMP Server
+#  survival: # Should be the same name defined in the velocity.toml
+#    virtual_host: play.example.com # Optional, only used by ping trigger and respond_ping action
+#    control_api:
+#      type: 'amp'
+#      ads_url: 'http://localhost:8080/' # Required
+#      username: 'your_username' # Required
+#      password: 'your_password' # Required
+#      token: 'your_2fa_token' # Optional
+#      remember_me: false # Optional
+#      instance_id: 'MinecraftSurvival01' # Required
+#      start: 'instance_and_server' # Optional
+#      stop: 'server' # Optional
+#      instance_start_timeout: 30s # Optional
+
+# Example Pterodactyl Server
+#  survival: # Should be the same name defined in the velocity.toml
+#    virtual_host: play.example.com # Optional, only used by ping trigger and respond_ping action
+#    control_api:
+#      type: 'pterodactyl'
+#      panel_url: 'http://localhost:8080/' # Required
+#      api_key: 'your_api_key' # Required
+#      server_id: 'a84e3583' # Required
+
+# ============================================================================
+# RULES
+# ============================================================================
+# Rules execute actions based on triggers and conditions.
+# 
+# Rule structure: https://beyenilmez.github.io/autostartstop/configuration/rules
+#   triggers:    - What events should fire this rule
+#   conditions:  - (Optional) Should the rule execute
+#   action:      - What actions to perform
+#
+# Or use a template: https://beyenilmez.github.io/autostartstop/rule-templates
+#   template:    - Use a built-in template for common patterns
+#
+# Available Triggers: https://beyenilmez.github.io/autostartstop/triggers
+#   - proxy_start:           Fires when the proxy starts
+#   - proxy_shutdown:        Fires when the proxy shuts down
+#   - connection:            Fires when a player connects to a server
+#   - empty_server:          Fires when a server has been empty for a duration
+#   - cron:                  Fires when a cron expression is matched
+#   - ping:                  Fires when a client pings the proxy (server list/MOTD requests)
+#   - manual:                Fires via /autostartstop trigger command
+#
+# Available Actions: https://beyenilmez.github.io/autostartstop/actions
+#   - start:                 Start a server
+#   - stop:                  Stop a server
+#   - restart:               Restart a server
+#   - send_command:          Send a command to a server
+#   - connect:               Connect a player to a server
+#   - disconnect:            Disconnect one or more players from the proxy
+#   - allow_connection:      Allow a player to connect to a server
+#   - send_message:          Send a message to a player
+#   - send_action_bar:       Send an action bar message to a player
+#   - send_title:            Send a title to a player
+#   - clear_title:           Clear a player's title
+#   - show_bossbar:          Show a bossbar to a player
+#   - hide_bossbar:          Hide a bossbar from a player
+#   - deny_ping:             Deny a ping request (prevents ping response from being sent)
+#   - allow_ping:            Allow a ping request to proceed normally
+#   - respond_ping:          Respond to a ping request with a custom MOTD
+#   - if:                    Conditional action execution
+#   - while:                 Loop while a condition is true
+#   - sleep:                 Sleep for a duration
+#   - log:                   Log a message
+#   - exec:                  Execute a shell command
+#
+# Available Conditions: https://beyenilmez.github.io/autostartstop/conditions
+#   - server_status:         Check if server is online/offline
+#   - player_count:          Check player count on a server
+#   - string_equals:         Compare two strings
+#   - number_compare:        Compare numeric values
+#
+# All conditions support the 'invert' parameter to negate the result.
+#
+# For rule templates, see:
+# https://beyenilmez.github.io/autostartstop/rule-templates
+rules:
+  # Start servers when the proxy starts
+  start_on_proxy_start:
+    enabled: false
+    template: start_on_proxy_start
+    servers: []  # List of server names to start
+
+  # Stop servers when the proxy shuts down
+  stop_on_proxy_shutdown:
+    enabled: false
+    template: stop_on_proxy_shutdown
+    servers: []  # List of server names to stop
+
+  # Start a server when a player attempts to connect to it
+  start_on_connection:
+    enabled: false
+    template: start_on_connection
+    servers: []  # List of server names to monitor
+    # For mode-specific configuration, see:
+    # https://beyenilmez.github.io/autostartstop/rule-templates/start-on-connection/#connection-modes
+    mode: waiting_server  # Connection handling mode: none, disconnect, hold, waiting_server
+    waiting_server:
+      server: limbo # Name of the waiting server, typically a `limbo` server
+      start_waiting_server_on_connection: true # If `true`, automatically starts the waiting server on connection if it's offline
+      progress_bar:
+        enabled: true
+        message: "${${connection.server.name}.startup_progress_percentage}%"
+        progress: "${${connection.server.name}.startup_progress}"
+        color: WHITE # Bossbar color: PINK, BLUE, RED, GREEN, YELLOW, PURPLE, WHITE
+        overlay: PROGRESS # Bossbar overlay: PROGRESS, NOTCHED_6, NOTCHED_10, NOTCHED_12, NOTCHED_20
+      title:
+        enabled: true
+        title: "Please Wait..."
+        subtitle: "<gold>${connection.server.name}</gold> <gray>is ${${connection.server.name}.state}. You will be connected shortly.</gray>"
+        fade_in: 1s
+        stay: 1h
+        fade_out: 1s
+      message:
+        enabled: false
+        message: "<gold>${connection.server.name}</gold> <gray>is starting. You will be connected shortly.</gray>"
+      action_bar:
+        enabled: false
+        message: "Server is ${${connection.server.name}.state}"
+
+  # Stop servers after they've been empty for a duration
+  stop_on_empty:
+    enabled: false
+    template: stop_on_empty
+    empty_time: 15m  # Duration server must be empty before stopping
+    servers: []  # List of server names to monitor
+
+  # Customize ping/MOTD responses based on server status
+  respond_ping:
+    enabled: false
+    template: respond_ping
+    servers: []  # List of server names to handle (maps to virtual_hosts from servers section)
+    offline:
+      use_cached_motd: true
+      motd: ""
+      version_name: "<blue>◉ Sleeping"
+      protocol_version: -1
+      icon: "/path/to/offline-icon.png"
+    online:
+      use_cached_motd: false
+      motd: ""
+      version_name: ""
+      protocol_version: 772
+      icon: "/path/to/online-icon.png"
+
+  periodic_restart:
+    enabled: false
+    triggers:
+      - cron:
+          format: UNIX  # UNIX, QUARTZ, CRON4J, SPRING, SPRING53
+          expression: '0 3 * * *' # Every day at 3 AM, you may check https://crontab.guru/#0_3_*_*_* for help
+          time_zone: 'UTC+00:00'
+    action:
+      - restart:
+          server: survival # Name of the server to restart
+      # You may add more restart actions here to restart multiple servers at once

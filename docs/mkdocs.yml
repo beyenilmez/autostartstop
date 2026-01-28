@@ -1,0 +1,222 @@
+# MkDocs configuration
+docs_dir: src
+strict: true  # Fail on warnings
+validation:
+  nav:
+    omitted_files: warn
+    not_found: warn
+    absolute_links: relative_to_docs
+  links:
+    not_found: warn
+    anchors: warn
+    absolute_links: relative_to_docs
+    unrecognized_links: warn
+
+# Project information
+site_name: AutoStartStop
+site_url: https://beyenilmez.github.io/autostartstop/
+site_author: Bedirhan Yenilmez
+site_description: >-
+  AutoStartStop is a Velocity plugin for automated server management that lets you define
+  rule-based automation with triggers, conditions, and actions.
+
+# Repository
+repo_name: beyenilmez/autostartstop
+repo_url: https://github.com/beyenilmez/autostartstop/
+
+# Copyright
+copyright: Copyright &copy; 2026 Bedirhan Yenilmez &ndash; Licensed under GPL-3.0
+
+# Configuration
+theme:
+  name: material
+  language: en
+  custom_dir: overrides
+  features:
+    # - content.action.edit
+    # - content.action.view
+    # - content.code.annotate
+    - content.code.copy
+    # - content.code.select
+    # - content.footnote.tooltips
+    # - content.tabs.link
+    - content.tooltips
+    # - header.autohide
+    # - navigation.expand
+    - navigation.footer
+    - navigation.indexes
+    - navigation.instant
+    - navigation.instant.prefetch
+    - navigation.instant.progress
+    - navigation.path
+    # - navigation.prune
+    # - navigation.sections
+    # - navigation.tabs
+    # - navigation.tabs.sticky
+    - navigation.top
+    # - navigation.tracking
+    - search.highlight
+    - search.share
+    - search.suggest
+    - toc.follow
+    # - toc.integrate
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/link
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: indigo
+      toggle:
+        icon: material/toggle-switch-off
+        name: Switch to system preference
+  font:
+    text: Roboto
+    code: Roboto Mono
+  favicon: assets/favicon.png
+  logo: assets/logo.png
+  icon:
+    repo: fontawesome/brands/github
+    previous: fontawesome/solid/angle-left
+    next: fontawesome/solid/angle-right
+
+# Plugins
+plugins:
+  - group:
+      enabled: !ENV [CI, false]
+      plugins:
+        - social
+        - optimize
+        - privacy
+        - offline
+        - minify:
+            minify_html: true
+  - search
+  - include-markdown:
+      rewrite_relative_urls: true
+
+# Additional configuration
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/beyenilmez/autostartstop
+      name: AutoStartStop on GitHub
+    - icon: simple/modrinth
+      link: https://modrinth.com/plugin/autostartstop
+      name: AutoStartStop on Modrinth
+    - icon: hangar
+      link: https://hangar.papermc.io/beyenilmez/AutoStartStop
+      name: AutoStartStop on Hangar
+
+# Extensions
+markdown_extensions:
+  - admonition
+
+  # Python Markdown
+  - toc
+
+  # Python Markdown Extensions
+  - pymdownx.details
+  - pymdownx.highlight
+  - pymdownx.superfences
+
+  # Grid Extensions
+  - attr_list
+  - md_in_html
+
+# Page tree
+nav:
+  - Overview:
+      - index.md
+  - Getting started:
+      - getting-started/index.md
+      - Installation: getting-started/installation.md
+      - Basic Concepts: getting-started/basic-concepts.md
+  - Commands: commands.md
+  - Configuration:
+      - configuration/index.md
+      - Settings: configuration/settings.md
+      - Defaults: configuration/defaults.md
+      - Servers: configuration/servers.md
+      - Rules: configuration/rules.md
+  - Control API:
+      - control-api/index.md
+      - Shell: control-api/shell.md
+      - AMP: control-api/amp.md
+      - Pterodactyl: control-api/pterodactyl.md
+  - Variables: variables.md
+  - Triggers:
+      - triggers/index.md
+      - proxy_start: triggers/proxy-start.md
+      - proxy_shutdown: triggers/proxy-shutdown.md
+      - connection: triggers/connection.md
+      - empty_server: triggers/empty-server.md
+      - cron: triggers/cron.md
+      - ping: triggers/ping.md
+      - manual: triggers/manual.md
+  - Conditions:
+      - conditions/index.md
+      - server_status: conditions/server-status.md
+      - player_count: conditions/player-count.md
+      - string_equals: conditions/string-equals.md
+      - number_compare: conditions/number-compare.md
+  - Actions:
+      - actions/index.md
+      - Server management:
+          - actions/server-management/index.md
+          - start: actions/server-management/start.md
+          - stop: actions/server-management/stop.md
+          - restart: actions/server-management/restart.md
+          - send_command: actions/server-management/send-command.md
+      - Player management:
+          - actions/player-management/index.md
+          - connect: actions/player-management/connect.md
+          - disconnect: actions/player-management/disconnect.md
+          - allow_connection: actions/player-management/allow-connection.md
+      - Player communication:
+          - actions/player-communication/index.md
+          - send_message: actions/player-communication/send-message.md
+          - send_action_bar: actions/player-communication/send-action-bar.md
+          - send_title: actions/player-communication/send-title.md
+          - clear_title: actions/player-communication/clear-title.md
+          - show_bossbar: actions/player-communication/show-bossbar.md
+          - hide_bossbar: actions/player-communication/hide-bossbar.md
+      - Ping management:
+          - actions/ping-management/index.md
+          - deny_ping: actions/ping-management/deny-ping.md
+          - allow_ping: actions/ping-management/allow-ping.md
+          - respond_ping: actions/ping-management/respond-ping.md
+      - Control flow:
+          - actions/control-flow/index.md
+          - if: actions/control-flow/if.md
+          - while: actions/control-flow/while.md
+      - Utility:
+          - actions/utility/index.md
+          - sleep: actions/utility/sleep.md
+          - log: actions/utility/log.md
+          - exec: actions/utility/exec.md
+  - Templates:
+      - rule-templates/index.md
+      - start_on_proxy_start: rule-templates/start-on-proxy-start.md
+      - stop_on_proxy_shutdown: rule-templates/stop-on-proxy-shutdown.md
+      - start_on_connection: rule-templates/start-on-connection.md
+      - stop_on_empty: rule-templates/stop-on-empty.md
+      - respond_ping: rule-templates/respond-ping.md
+  - Examples:
+      - examples/index.md
+      - Auto Start/Stop with Custom Ping Response: examples/auto-start-stop-with-custom-ping-response.md
+      - Scheduled Restart: examples/scheduled-restart-with-proxy-start.md
+      - Hourly Random Reward: examples/hourly-random-reward.md
+  - Guides:
+      - guides/index.md
+      - AMP Control API User Setup: guides/amp-user-setup.md
+  - Credits: credits.md
