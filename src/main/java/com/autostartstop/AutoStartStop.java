@@ -43,7 +43,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.time.Duration;
 
-@Plugin(id = "autostartstop", name = "AutoStartStop", version = "1.0.0-beta", authors = {
+@Plugin(id = "autostartstop", name = "AutoStartStop", version = "1.0.1-beta", authors = {
         "beyenilmez" }, description = "Automated server management with rule-based triggers and actions")
 public class AutoStartStop {
     private static final Logger logger = Log.get(AutoStartStop.class);

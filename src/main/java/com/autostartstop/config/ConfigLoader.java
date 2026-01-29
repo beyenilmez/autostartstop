@@ -53,15 +53,25 @@ public class ConfigLoader {
         Path configPath = dataDirectory.resolve("config.yml");
         logger.debug("Configuration file path: {}", configPath);
 
-        // Load default config from resources
+        // When config does not exist, copy the default config from resources directly
+        // so the file on disk matches config.yml exactly (comments, order, formatting).
+        boolean configExists = Files.exists(configPath);
+        if (!configExists) {
+            try (InputStream defaultConfigStream = getClass().getResourceAsStream("/config.yml")) {
+                if (defaultConfigStream == null) {
+                    throw new IOException("Default config.yml not found in resources");
+                }
+                Files.copy(defaultConfigStream, configPath);
+                logger.debug("Copied default config.yml from resources");
+            }
+        }
+
+        // Load default config stream for updater (version migration)
         InputStream defaultConfig = getClass().getResourceAsStream("/config.yml");
         if (defaultConfig == null) {
             throw new IOException("Default config.yml not found in resources");
         }
 
-        // Load or create config file
-        boolean configExists = Files.exists(configPath);
-        
         configDocument = YamlDocument.create(
                 configPath.toFile(),
                 defaultConfig,
@@ -71,7 +81,7 @@ public class ConfigLoader {
                 UpdaterSettings.builder().setVersioning(new BasicVersioning("version")).build()
         );
         
-        logger.debug(configExists ? "Loaded existing config" : "Created new config from defaults");
+        logger.debug(configExists ? "Loaded existing config" : "Loaded newly created config");
 
         // Parse the configuration
         pluginConfig = parseConfig();
