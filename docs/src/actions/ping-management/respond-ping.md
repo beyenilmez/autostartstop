@@ -11,6 +11,7 @@ action:
   - respond_ping:
       ping: ${ping}                         # Ping event (default: ${ping})
       use_cached_motd: true                 # Use cached MOTD if available
+      use_backend_motd: false               # Use live backend MOTD (pings `${ping.server}`)
       motd: "<yellow>Custom MOTD</yellow>"  # Custom MOTD (MiniMessage format)
       version_name: "Custom Version"        # Version name
       protocol_version: -1                  # Protocol version
