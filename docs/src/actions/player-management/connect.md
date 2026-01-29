@@ -12,6 +12,7 @@ action:
         - Player1
         - Player2
       server: survival    # Target server
+      error_message: '<red>Could not connect to the server.</red>'  # Optional; sent to player on connection failure
 ```
 
 ## Configuration fields
@@ -21,6 +22,7 @@ action:
 | `player` | - | Single player name or UUID |
 | `players` | - | List of player names or UUIDs |
 | `server` | - | Target server name |
+| `error_message` | `<red>Could not connect to ${connect_server}: ${connect_error_reason}</red>` | MiniMessage sent to the player when the connection fails. Supports variables: `connect_server` (target server name), `connect_error_reason` (failure reason from the server or exception message). |
 
 ## Example
 

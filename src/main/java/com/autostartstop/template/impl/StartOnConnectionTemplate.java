@@ -367,7 +367,7 @@ public class StartOnConnectionTemplate implements Template {
                     }
 
                     // Step 2: Connect player to waiting server
-                    return connectPlayerToServer(player, waitingServerName)
+                    return connectPlayerToServer(player, waitingServerName, ctx, waitingServerConfig.getConnectErrorMessage())
                             .thenCompose(connected -> {
                                 if (!connected) {
                                     logger.warn("StartOnConnectionTemplate: failed to connect player to waiting server");
@@ -402,7 +402,7 @@ public class StartOnConnectionTemplate implements Template {
                                                     
                                                     // Step 9: Connect to target server
                                                     logger.debug("StartOnConnectionTemplate: connecting player to target server");
-                                                    return connectPlayerToServer(player, targetServerName)
+                                                    return connectPlayerToServer(player, targetServerName, ctx, waitingServerConfig.getConnectErrorMessage())
                                                             .thenApply(success -> null);
                                                 });
                                             } else {
@@ -666,8 +666,10 @@ public class StartOnConnectionTemplate implements Template {
 
     /**
      * Connects a player to a server.
+     * @param errorMessageTemplate Optional MiniMessage template to send on failure (supports ${connect_server}, ${connect_error_reason}). Null/blank = do not message.
      */
-    private CompletableFuture<Boolean> connectPlayerToServer(Player player, String serverName) {
+    private CompletableFuture<Boolean> connectPlayerToServer(Player player, String serverName,
+            ExecutionContext ctx, String errorMessageTemplate) {
         // Check if player is still connected
         if (!player.isActive()) {
             logger.warn("StartOnConnectionTemplate: player '{}' is no longer active, cannot connect to '{}'",
@@ -694,17 +696,42 @@ public class StartOnConnectionTemplate implements Template {
                                 player.getUsername(), serverName);
                         return true;
                     } else {
+                        String reasonText = result.getReasonComponent()
+                                .map(MiniMessageUtil::toPlainText)
+                                .orElse("");
                         logger.warn("StartOnConnectionTemplate: failed to connect player '{}' to '{}' - status: {}, reason: {}",
-                                player.getUsername(), serverName, result.getStatus(),
-                                result.getReasonComponent().map(c -> MiniMessageUtil.toPlainText(c)).orElse("none"));
+                                player.getUsername(), serverName, result.getStatus(), reasonText);
+                        sendConnectErrorMessage(player, serverName, reasonText, ctx, errorMessageTemplate);
                         return false;
                     }
                 })
                 .exceptionally(e -> {
                     logger.error("StartOnConnectionTemplate: error connecting player '{}' to '{}': {}", 
                             player.getUsername(), serverName, e.getMessage());
+                    sendConnectErrorMessage(player, serverName, e.getMessage(), ctx, errorMessageTemplate);
                     return false;
                 });
+    }
+
+    private void sendConnectErrorMessage(Player player, String serverName, String reasonText,
+            ExecutionContext ctx, String errorMessageTemplate) {
+        if (errorMessageTemplate == null || errorMessageTemplate.isBlank()) {
+            return;
+        }
+        try {
+            Map<String, Object> errVars = new HashMap<>();
+            errVars.put("connect_server", serverName);
+            errVars.put("connect_error_reason", reasonText != null ? reasonText : "");
+            ExecutionContext errContext = new ExecutionContext(ctx, errVars);
+            String resolved = context.variableResolver().resolve(errorMessageTemplate, errContext);
+            Component messageComponent = MiniMessageUtil.parse(resolved);
+            if (messageComponent != null && !Component.empty().equals(messageComponent)) {
+                player.sendMessage(messageComponent);
+            }
+        } catch (Exception e) {
+            logger.debug("StartOnConnectionTemplate: failed to send connect error message to '{}': {}",
+                    player.getUsername(), e.getMessage());
+        }
     }
 
     /**
@@ -758,6 +785,12 @@ public class StartOnConnectionTemplate implements Template {
 
         public boolean isStartWaitingServerOnConnection() {
             return accessor.getBoolean("start_waiting_server_on_connection", true);
+        }
+
+        /** Message sent to the player when connect to target (or waiting) server fails. Supports ${connect_server} and ${connect_error_reason}. */
+        public String getConnectErrorMessage() {
+            return accessor.getString("connect_error_message",
+                    "<red>Could not connect to ${connect_server}: ${connect_error_reason}</red>");
         }
 
         // Message config

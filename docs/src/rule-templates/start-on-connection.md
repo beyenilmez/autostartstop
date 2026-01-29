@@ -79,6 +79,7 @@ rules:
     waiting_server:
       server: limbo
       start_waiting_server_on_connection: true
+      connect_error_message: '<red>Could not connect to ${connect_server}: ${connect_error_reason}</red>'
       message:
         enabled: false
         message: "<gold>${connection.server.name}</gold> <gray>is starting. You will be connected shortly.</gray>"
@@ -108,6 +109,7 @@ When using `waiting_server` mode, you can configure the waiting experience:
 |-------|---------|-------------|
 | `server` | - | Name of the waiting server, typically a `limbo` server |
 | `start_waiting_server_on_connection` | `true` | If `true`, automatically starts the waiting server on connection if it's offline, works like hold mode |
+| `connect_error_message` | `"<red>Could not connect to ${connect_server}: ${connect_error_reason}</red>"` | MiniMessage sent to the player when connecting to the waiting server or target server fails. Supports variables: `connect_server` (server name), `connect_error_reason` (failure reason). |
 | `message` | - | Message configuration (see [below](#message-configuration)) |
 | `progress_bar` | - | Bossbar/progress bar configuration (see [below](#progress-bar-configuration)) |
 | `title` | - | Title configuration (see [below](#title-configuration)) |

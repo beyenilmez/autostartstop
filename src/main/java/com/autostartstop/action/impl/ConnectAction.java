@@ -6,13 +6,17 @@ import com.autostartstop.action.ActionType;
 import com.autostartstop.config.ActionConfig;
 import com.autostartstop.context.ExecutionContext;
 import com.autostartstop.Log;
+import com.autostartstop.util.MiniMessageUtil;
 import com.autostartstop.util.TargetResolver;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
+import net.kyori.adventure.text.Component;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
@@ -22,17 +26,20 @@ import java.util.concurrent.CompletableFuture;
 public class ConnectAction implements Action {
     private static final Logger logger = Log.get(ConnectAction.class);
     private static final String ACTION_NAME = "connect";
-    
+    private static final String DEFAULT_ERROR_MESSAGE = "<red>Could not connect to ${connect_server}: ${connect_error_reason}</red>";
+
     private final String playerParam;
     private final List<String> playersParam;
     private final String serverParam;
+    private final String errorMessage;
     private final TargetResolver targetResolver;
 
     public ConnectAction(String playerParam, List<String> playersParam, String serverParam,
-            TargetResolver targetResolver) {
+            String errorMessage, TargetResolver targetResolver) {
         this.playerParam = playerParam;
         this.playersParam = playersParam;
         this.serverParam = serverParam;
+        this.errorMessage = errorMessage;
         this.targetResolver = targetResolver;
     }
 
@@ -43,7 +50,8 @@ public class ConnectAction implements Action {
         String player = config.getString("player");
         List<String> players = config.getStringList("players");
         String server = config.requireString("server");
-        return new ConnectAction(player, players, server, ctx.targetResolver());
+        String errorMessage = config.getString("error_message", DEFAULT_ERROR_MESSAGE);
+        return new ConnectAction(player, players, server, errorMessage, ctx.targetResolver());
     }
 
     @Override
@@ -85,15 +93,19 @@ public class ConnectAction implements Action {
                                     ruleName, ACTION_NAME, playerName, serverName);
                             return true;
                         } else {
+                            String reasonText = result.getReasonComponent()
+                                    .map(MiniMessageUtil::toPlainText)
+                                    .orElse("");
                             logger.warn("({}) {}: Failed to connect '{}' to '{}': {}", 
-                                    ruleName, ACTION_NAME, playerName, serverName, 
-                                    result.getReasonComponent().orElse(null));
+                                    ruleName, ACTION_NAME, playerName, serverName, reasonText);
+                            sendConnectionErrorMessage(player, serverName, reasonText, context);
                             return false;
                         }
                     })
                     .exceptionally(e -> {
                         logger.error("({}) {}: Error connecting '{}': {}", 
                                 ruleName, ACTION_NAME, playerName, e.getMessage());
+                        sendConnectionErrorMessage(player, serverName, e.getMessage(), context);
                         return false;
                     });
             futures.add(future);
@@ -108,6 +120,27 @@ public class ConnectAction implements Action {
                     logger.debug("({}) {}: Connected {}/{} player(s) to '{}'", 
                             ruleName, ACTION_NAME, successCount, playersToConnect.size(), serverName);
                 });
+    }
+
+    private void sendConnectionErrorMessage(Player player, String serverName, String reasonText,
+            ExecutionContext context) {
+        if (errorMessage == null || errorMessage.isBlank()) {
+            return;
+        }
+        try {
+            Map<String, Object> errVars = new HashMap<>();
+            errVars.put("connect_server", serverName);
+            errVars.put("connect_error_reason", reasonText != null ? reasonText : "");
+            ExecutionContext errContext = new ExecutionContext(context, errVars);
+            String resolved = targetResolver.getVariableResolver().resolve(errorMessage, errContext);
+            Component messageComponent = MiniMessageUtil.parse(resolved);
+            if (messageComponent != null && !Component.empty().equals(messageComponent)) {
+                player.sendMessage(messageComponent);
+            }
+        } catch (Exception e) {
+            logger.debug("({}) {}: Failed to send error message to '{}': {}", 
+                    context.getVariable("_rule_name", "unknown"), ACTION_NAME, player.getUsername(), e.getMessage());
+        }
     }
 
     public String getPlayerParam() { return playerParam; }
