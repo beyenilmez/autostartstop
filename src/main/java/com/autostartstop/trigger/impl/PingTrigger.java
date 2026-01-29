@@ -19,8 +19,10 @@ import net.kyori.adventure.text.Component;
 import org.slf4j.Logger;
 
 import java.net.InetSocketAddress;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -30,6 +32,7 @@ import java.util.function.Function;
  * Trigger that fires when a client pings the proxy server (server list/MOTD requests).
  * Emitted context:
  * - ${ping} - ProxyPingEvent object
+ * - ${ping.server} - Backend server name (resolved from virtual host, null if no match)
  * - ${ping.server.version_name} - Server version name
  * - ${ping.server.protocol_version} - Server protocol version
  * - ${ping.server.player_count} - Current player count
@@ -60,6 +63,9 @@ public class PingTrigger implements Trigger {
     // Merged virtual hosts from both virtual_host_list and server_list (computed once during activate)
     private Set<String> mergedVirtualHosts;
     private String mergedMode;
+
+    // virtual_host (lowercase) -> server name, built once in activate for O(1) lookup
+    private Map<String, String> virtualHostToServerMap;
 
     /**
      * Creates a PingTrigger from the given configuration.
@@ -143,6 +149,12 @@ public class PingTrigger implements Trigger {
         if (!mergedVirtualHosts.isEmpty()) {
             logger.debug("PingTrigger: merged {} virtual hosts (mode: {})", mergedVirtualHosts.size(), mergedMode);
         }
+
+        // Build virtual_host -> server map once for O(1) ping.server resolution
+        this.virtualHostToServerMap = buildVirtualHostToServerMap();
+        if (!virtualHostToServerMap.isEmpty()) {
+            logger.debug("PingTrigger: built virtual_host -> server map with {} entries", virtualHostToServerMap.size());
+        }
         
         String virtualHostFilterInfo = virtualHostList != null && virtualHostList.getVirtualHosts() != null 
                 ? virtualHostList.getMode() + ":" + virtualHostList.getVirtualHosts().size() 
@@ -174,6 +186,7 @@ public class PingTrigger implements Trigger {
         this.activated = false;
         this.mergedVirtualHosts = null;
         this.mergedMode = null;
+        this.virtualHostToServerMap = null;
 
         logger.debug("PingTrigger: unregistered from event manager");
     }
@@ -316,8 +329,39 @@ public class PingTrigger implements Trigger {
         String domainUsed = virtualHost.map(InetSocketAddress::getHostName).orElse(null);
         context.setVariable("ping.player.virtual_host", domainUsed);
 
+        // Resolve virtual host to backend server name (O(1) lookup from pre-built map)
+        String serverName = domainUsed != null && virtualHostToServerMap != null
+                ? virtualHostToServerMap.get(domainUsed.toLowerCase())
+                : null;
+        context.setVariable("ping.server", serverName);
+
         com.velocitypowered.api.network.ProtocolVersion protocolVersion = connection.getProtocolVersion();
         context.setVariable("ping.player.protocol_version", protocolVersion.getProtocol());
+    }
+
+    /**
+     * Builds virtual_host (lowercase) -> server name map from plugin configuration.
+     * Called once in activate() so ping.server resolution is O(1).
+     */
+    private Map<String, String> buildVirtualHostToServerMap() {
+        Map<String, String> map = new HashMap<>();
+        if (serverManager == null) {
+            return map;
+        }
+        PluginConfig pluginConfig = serverManager.getPluginConfig();
+        if (pluginConfig == null || pluginConfig.getServers() == null) {
+            return map;
+        }
+        for (var entry : pluginConfig.getServers().entrySet()) {
+            ServerConfig serverConfig = entry.getValue();
+            if (serverConfig != null) {
+                String virtualHost = serverConfig.getVirtualHost();
+                if (virtualHost != null && !virtualHost.isBlank()) {
+                    map.put(virtualHost.toLowerCase(), entry.getKey());
+                }
+            }
+        }
+        return map;
     }
 
     /**

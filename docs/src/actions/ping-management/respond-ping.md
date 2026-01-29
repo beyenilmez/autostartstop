@@ -23,7 +23,8 @@ action:
 |-------|---------|-------------|
 | `ping` | `${ping}` | The ping event object |
 | `use_cached_motd` | `false` | If `true`, uses cached MOTD if available |
-| `motd` | - | Custom MOTD in MiniMessage format. Supports variables. |
+| `use_backend_motd` | `false` | If `true`, uses live backend MOTD (pings `${ping.server}`). Requires `ping.server` to be set (done by [ping](/triggers/ping.md) trigger). |
+| `motd` | - | Custom MOTD in MiniMessage format. Used when cached and backend MOTD are not used. Supports variables. |
 | `version_name` | - | Version name to display. Supports variables. |
 | `protocol_version` | - | Protocol version (use `-1` to show version name text to clients) |
 | `icon` | - | Server icon file path or base64 string (must be 64x64 PNG) |
@@ -48,7 +49,7 @@ action:
     
     2. When `use_cached_motd: true` is used, the action retrieves the cached MOTD based on the client's virtual host from the ping request (`${ping.player.virtual_host}`).
     
-    3. If cached MOTD is not found for the virtual host, the `motd` parameter (if provided) will be used as fallback.
+    3. MOTD priority: **cached** (if `use_cached_motd` and cache hit) → **backend** (if `use_backend_motd` and ping succeeds) → **motd** (custom). 
     
     See [Servers](/configuration/servers.md#virtual-host) for server configuration details and [Settings](/configuration/settings.md#motd_cache_interval) for MOTD cache interval configuration.
 

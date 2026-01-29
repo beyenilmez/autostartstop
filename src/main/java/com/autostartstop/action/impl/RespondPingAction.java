@@ -8,16 +8,19 @@ import com.autostartstop.context.ExecutionContext;
 import com.autostartstop.context.VariableResolver;
 import com.autostartstop.Log;
 import com.autostartstop.server.MotdCacheManager;
+import com.autostartstop.server.ServerManager;
 import com.autostartstop.util.IconUtil;
 import com.autostartstop.util.MiniMessageUtil;
 import com.velocitypowered.api.event.ResultedEvent;
 import com.velocitypowered.api.event.proxy.ProxyPingEvent;
+import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.proxy.server.ServerPing;
 import com.velocitypowered.api.util.Favicon;
 import net.kyori.adventure.text.Component;
 import org.slf4j.Logger;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Action that responds to a ping request with custom ping data.
@@ -26,7 +29,8 @@ import java.util.concurrent.CompletableFuture;
  * Configuration:
  * - ping: ServerPing object to use (default: ${ping}, which means use event.getPing())
  * - use_cached_motd: Use cached MOTD if true and cache exists (default: false)
- * - motd: Custom MOTD in MiniMessage format (optional, overrides cached MOTD if provided)
+ * - use_backend_motd: Use live backend server MOTD if true (used when cached MOTD not used or not found)
+ * - motd: Custom MOTD in MiniMessage format (optional, used when cached/backend MOTD not used)
  * - version_name: Version name to set (optional)
  * - protocol_version: Protocol version to set (optional, as string like "-1")
  * - icon: Server icon file path or base64 string (optional, must be 64x64 PNG)
@@ -37,25 +41,30 @@ public class RespondPingAction implements Action {
     
     private final String pingParam;
     private final Boolean useCachedMotd;
+    private final Boolean useBackendMotd;
     private final String motdParam;
     private final String versionName;
     private final String protocolVersion;
     private final String iconParam;
     private final VariableResolver variableResolver;
     private final MotdCacheManager motdCacheManager;
+    private final ServerManager serverManager;
 
-    public RespondPingAction(String pingParam, Boolean useCachedMotd, 
+    public RespondPingAction(String pingParam, Boolean useCachedMotd, Boolean useBackendMotd,
                             String motdParam, String versionName, String protocolVersion,
                             String iconParam,
-                            VariableResolver variableResolver, MotdCacheManager motdCacheManager) {
+                            VariableResolver variableResolver, MotdCacheManager motdCacheManager,
+                            ServerManager serverManager) {
         this.pingParam = pingParam;
         this.useCachedMotd = useCachedMotd;
+        this.useBackendMotd = useBackendMotd;
         this.motdParam = motdParam;
         this.versionName = versionName;
         this.protocolVersion = protocolVersion;
         this.iconParam = iconParam;
         this.variableResolver = variableResolver;
         this.motdCacheManager = motdCacheManager;
+        this.serverManager = serverManager;
     }
 
     /**
@@ -70,6 +79,12 @@ public class RespondPingAction implements Action {
         if (config.hasKey("use_cached_motd")) {
             useCachedMotd = config.getBoolean("use_cached_motd", false);
         }
+
+        // Parse top-level use_backend_motd
+        Boolean useBackendMotd = null;
+        if (config.hasKey("use_backend_motd")) {
+            useBackendMotd = config.getBoolean("use_backend_motd", false);
+        }
         
         // Parse top-level motd
         String motd = config.getString("motd", null);
@@ -83,8 +98,8 @@ public class RespondPingAction implements Action {
         // Parse top-level icon
         String icon = config.getString("icon", null);
         
-        return new RespondPingAction(ping, useCachedMotd, motd, versionName, protocolVersion, icon,
-                ctx.variableResolver(), ctx.motdCacheManager());
+        return new RespondPingAction(ping, useCachedMotd, useBackendMotd, motd, versionName, protocolVersion, icon,
+                ctx.variableResolver(), ctx.motdCacheManager(), ctx.serverManager());
     }
 
     @Override
@@ -123,12 +138,11 @@ public class RespondPingAction implements Action {
         // Build new ServerPing with modifications
         ServerPing.Builder pingBuilder = pingToUse.asBuilder();
         
-        // Handle MOTD
+        // Handle MOTD (priority: use_cached_motd > use_backend_motd > motd)
         Component motdComponent = null;
-        
-        // Cached MOTD is checked first (takes precedence)
+
+        // Cached MOTD has highest priority
         if (useCachedMotd != null && useCachedMotd && motdCacheManager != null) {
-            // Try to get cached MOTD
             String virtualHost = (String) context.getVariable("ping.player.virtual_host", null);
             logger.debug("({}) {}: Looking for cached MOTD, useCachedMotd={}, virtualHost='{}', motdCacheManager={}", 
                     ruleName, ACTION_NAME, useCachedMotd, virtualHost, motdCacheManager != null);
@@ -141,11 +155,38 @@ public class RespondPingAction implements Action {
                 logger.debug("({}) {}: Cached MOTD requested but not found for virtual host '{}'", 
                         ruleName, ACTION_NAME, virtualHost);
             }
-        } else {
-            logger.debug("({}) {}: Cached MOTD not requested (useCachedMotd={}, motdCacheManager={})", 
-                    ruleName, ACTION_NAME, useCachedMotd, motdCacheManager != null);
         }
-        // Custom MOTD is used only if cached MOTD is not available
+
+        // Backend MOTD (live ping) if cached not used or not found
+        if (motdComponent == null && useBackendMotd != null && useBackendMotd && serverManager != null) {
+            String serverName = (String) context.getVariable("ping.server", null);
+            if (serverName != null) {
+                RegisteredServer registeredServer = serverManager.getRegisteredServer(serverName);
+                if (registeredServer != null) {
+                    try {
+                        ServerPing ping = registeredServer.ping().orTimeout(5, TimeUnit.SECONDS).join();
+                        Component description = ping.getDescriptionComponent();
+                        if (description != null) {
+                            motdComponent = description;
+                            logger.debug("({}) {}: Using backend MOTD from server '{}'", 
+                                    ruleName, ACTION_NAME, serverName);
+                        }
+                    } catch (Exception e) {
+                        logger.warn("({}) {}: Failed to get backend MOTD from server '{}': {}", 
+                                ruleName, ACTION_NAME, serverName, e.getMessage());
+                        logger.debug("Backend MOTD error details:", e);
+                    }
+                } else {
+                    logger.debug("({}) {}: No RegisteredServer for '{}', skipping backend MOTD", 
+                            ruleName, ACTION_NAME, serverName);
+                }
+            } else {
+                logger.debug("({}) {}: use_backend_motd true but ping.server not in context", 
+                        ruleName, ACTION_NAME);
+            }
+        }
+
+        // Custom MOTD only if cached and backend MOTD are not available
         if (motdComponent == null && motdParam != null && !motdParam.isEmpty()) {
             String resolvedMotd = variableResolver.resolve(motdParam, context);
             motdComponent = MiniMessageUtil.parse(resolvedMotd);

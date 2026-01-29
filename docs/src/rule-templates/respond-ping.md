@@ -16,12 +16,14 @@ rules:
       - creative
     offline:        # Configuration for when server is offline
       use_cached_motd: true
+      use_backend_motd: false
       motd: ""
       version_name: "<blue>◉ Sleeping"
       protocol_version: -1
       icon: "/path/to/offline-icon.png"
     online:         # Configuration for when server is online
       use_cached_motd: false
+      use_backend_motd: false
       motd: ""
       version_name: ""
       protocol_version: -1
@@ -44,7 +46,8 @@ Both `offline` and `online` sections support the same fields:
 | Field | Default | Description |
 |-------|---------|-------------|
 | `use_cached_motd` | false | If `true`, uses the cached MOTD from when the server was last online. If `false` or not specified, uses the `motd` field. |
-| `motd` | - | Custom MOTD text (MiniMessage format). If `use_cached_motd` is `true`, this is ignored. Supports variables. |
+| `use_backend_motd` | false | If `true`, uses the live backend server MOTD. |
+| `motd` | - | Custom MOTD text (MiniMessage format). Used when cached and backend MOTD are not used. Supports variables. |
 | `version_name` | - | Custom version name text (MiniMessage format). Use with `protocol_version: -1` to show custom text instead of version. Supports variables. |
 | `protocol_version` | - | Protocol version number. Use `-1` to show `version_name` as text instead of a version number. |
 | `icon` | - | Server icon. Can be a file path or base64-encoded png image string. Must be 64x64 pixels. |

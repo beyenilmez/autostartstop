@@ -6,8 +6,6 @@ import com.autostartstop.config.ActionConfig;
 import com.autostartstop.config.ConfigAccessor;
 import com.autostartstop.config.TemplateConfig;
 import com.autostartstop.config.TriggerConfig;
-import com.autostartstop.config.PluginConfig;
-import com.autostartstop.config.ServerConfig;
 import com.autostartstop.context.ExecutionContext;
 import com.autostartstop.template.Template;
 import com.autostartstop.template.TemplateContext;
@@ -15,7 +13,6 @@ import com.autostartstop.template.TemplateType;
 import com.autostartstop.trigger.impl.PingTrigger;
 import org.slf4j.Logger;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,12 +30,14 @@ import java.util.function.Function;
  *     - play.example.com
  *   offline:
  *     use_cached_motd: true
+ *     use_backend_motd: false
  *     motd: ''
  *     version_name: '<blue>◉ Sleeping'
  *     protocol_version: -1
  *     icon: '/path/to/offline-icon.png'  # Optional: file path or base64 string
  *   online:
  *     use_cached_motd: false
+ *     use_backend_motd: false
  *     motd: ''
  *     version_name: ''
  *     protocol_version: -1
@@ -59,9 +58,6 @@ public class RespondPingTemplate implements Template {
     private String ruleName;
     private PingTrigger trigger;
     private boolean activated = false;
-    
-    // Cached lookup map: virtual_host (lowercase) -> server name (computed once during activate)
-    private Map<String, String> virtualHostToServerMap;
 
     /**
      * Creates a RespondPingTemplate from the given configuration.
@@ -141,14 +137,7 @@ public class RespondPingTemplate implements Template {
             serverList = new TriggerConfig.ServerListConfig(serverListMap);
         }
 
-        // Build lookup map for fast server name resolution
-        this.virtualHostToServerMap = buildVirtualHostToServerMap();
-        if (!virtualHostToServerMap.isEmpty()) {
-            logger.debug("RespondPingTemplate: built lookup map with {} virtual_host -> server mappings", 
-                    virtualHostToServerMap.size());
-        }
-
-        // Create the ping trigger (it will handle all filtering)
+        // Create the ping trigger
         trigger = new PingTrigger(
                 context.proxy(),
                 context.plugin(),
@@ -182,7 +171,6 @@ public class RespondPingTemplate implements Template {
         }
 
         this.ruleName = null;
-        this.virtualHostToServerMap = null;
         activated = false;
 
         logger.debug("RespondPingTemplate: deactivated");
@@ -192,29 +180,18 @@ public class RespondPingTemplate implements Template {
      * Handles a ping event.
      */
     private CompletableFuture<Void> handlePing(ExecutionContext ctx) {
-        // Set rule name in context for actions
         ctx.setVariable("_rule_name", ruleName);
-        
-        // Get virtual_host from ping event context
-        String virtualHost = (String) ctx.getVariable("ping.player.virtual_host", null);
-        if (virtualHost == null || virtualHost.isEmpty()) {
-            logger.debug("RespondPingTemplate: no virtual_host in ping event, skipping");
-            return CompletableFuture.completedFuture(null);
-        }
-        
-        // Find server by virtual_host using lookup map
-        String serverName = virtualHostToServerMap.get(virtualHost.toLowerCase());
-        if (serverName == null) {
-            logger.debug("RespondPingTemplate: no server found with virtual_host '{}', skipping", virtualHost);
+
+        // Server name is resolved by PingTrigger and emitted as ping.server
+        String serverName = (String) ctx.getVariable("ping.server", null);
+        if (serverName == null || serverName.isEmpty()) {
+            logger.debug("RespondPingTemplate: no ping.server in context, skipping");
             return CompletableFuture.completedFuture(null);
         }
 
-        // Check server status
         boolean isOnline = context.serverManager().isServerOnline(serverName);
-        logger.debug("RespondPingTemplate: server '{}' (virtual_host: '{}') is {}", 
-                serverName, virtualHost, isOnline ? "ONLINE" : "OFFLINE");
+        logger.debug("RespondPingTemplate: server '{}' is {}", serverName, isOnline ? "ONLINE" : "OFFLINE");
 
-        // Select appropriate config
         PingConfig selectedConfig;
         if (isOnline) {
             if (onlineConfig != null) {
@@ -232,41 +209,7 @@ public class RespondPingTemplate implements Template {
             }
         }
 
-        // Create and execute RespondPingAction with selected config
         return executeRespondPingAction(selectedConfig, ctx);
-    }
-
-    /**
-     * Builds a lookup map of virtual_host (lowercase) -> server name.
-     * If servers list is specified, only includes those servers.
-     * Otherwise, includes all servers from config.
-     */
-    private Map<String, String> buildVirtualHostToServerMap() {
-        Map<String, String> mapping = new HashMap<>();
-        
-        PluginConfig pluginConfig = context.serverManager().getPluginConfig();
-        if (pluginConfig == null || pluginConfig.getServers() == null) {
-            logger.debug("RespondPingTemplate: plugin config or servers not available");
-            return mapping;
-        }
-
-        // Determine which servers to include in the map
-        List<String> serversToCheck;
-        serversToCheck = new ArrayList<>(pluginConfig.getServers().keySet());
-        
-        for (String serverName : serversToCheck) {
-            ServerConfig serverConfig = pluginConfig.getServers().get(serverName);
-            if (serverConfig != null) {
-                String serverVirtualHost = serverConfig.getVirtualHost();
-                if (serverVirtualHost != null && !serverVirtualHost.isBlank()) {
-                    mapping.put(serverVirtualHost.toLowerCase(), serverName);
-                    logger.debug("RespondPingTemplate: mapped virtual_host '{}' -> server '{}'", 
-                            serverVirtualHost, serverName);
-                }
-            }
-        }
-
-        return mapping;
     }
 
     /**
@@ -282,6 +225,9 @@ public class RespondPingTemplate implements Template {
         
         if (config.getUseCachedMotd() != null) {
             rawConfig.put("use_cached_motd", config.getUseCachedMotd());
+        }
+        if (config.getUseBackendMotd() != null) {
+            rawConfig.put("use_backend_motd", config.getUseBackendMotd());
         }
         // Only add motd if it's not null and not empty
         String motd = config.getMotd();
@@ -320,6 +266,7 @@ public class RespondPingTemplate implements Template {
      */
     private interface PingConfig {
         Boolean getUseCachedMotd();
+        Boolean getUseBackendMotd();
         String getMotd();
         String getVersionName();
         String getProtocolVersion();
@@ -332,6 +279,7 @@ public class RespondPingTemplate implements Template {
     private static class OfflineConfig implements PingConfig {
         private final ConfigAccessor accessor;
         final Boolean useCachedMotd;
+        final Boolean useBackendMotd;
         final String motd;
         final String versionName;
         final String protocolVersion;
@@ -340,6 +288,7 @@ public class RespondPingTemplate implements Template {
         OfflineConfig(Map<String, Object> config) {
             this.accessor = new ConfigAccessor(config, "offline");
             this.useCachedMotd = accessor.hasKey("use_cached_motd") ? accessor.getBoolean("use_cached_motd", false) : null;
+            this.useBackendMotd = accessor.hasKey("use_backend_motd") ? accessor.getBoolean("use_backend_motd", false) : null;
             this.motd = accessor.getString("motd");
             this.versionName = accessor.getString("version_name");
             this.protocolVersion = accessor.getString("protocol_version");
@@ -349,6 +298,11 @@ public class RespondPingTemplate implements Template {
         @Override
         public Boolean getUseCachedMotd() {
             return useCachedMotd;
+        }
+
+        @Override
+        public Boolean getUseBackendMotd() {
+            return useBackendMotd;
         }
 
         @Override
@@ -378,6 +332,7 @@ public class RespondPingTemplate implements Template {
     private static class OnlineConfig implements PingConfig {
         private final ConfigAccessor accessor;
         final Boolean useCachedMotd;
+        final Boolean useBackendMotd;
         final String motd;
         final String versionName;
         final String protocolVersion;
@@ -386,6 +341,7 @@ public class RespondPingTemplate implements Template {
         OnlineConfig(Map<String, Object> config) {
             this.accessor = new ConfigAccessor(config, "online");
             this.useCachedMotd = accessor.hasKey("use_cached_motd") ? accessor.getBoolean("use_cached_motd", false) : null;
+            this.useBackendMotd = accessor.hasKey("use_backend_motd") ? accessor.getBoolean("use_backend_motd", false) : null;
             this.motd = accessor.getString("motd");
             this.versionName = accessor.getString("version_name");
             this.protocolVersion = accessor.getString("protocol_version");
@@ -395,6 +351,11 @@ public class RespondPingTemplate implements Template {
         @Override
         public Boolean getUseCachedMotd() {
             return useCachedMotd;
+        }
+
+        @Override
+        public Boolean getUseBackendMotd() {
+            return useBackendMotd;
         }
 
         @Override

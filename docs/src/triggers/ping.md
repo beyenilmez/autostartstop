@@ -71,6 +71,7 @@ server_list:
 | Variable | Description |
 |----------|-------------|
 | `ping` | ProxyPingEvent object |
+| `ping.server` | Backend server name (resolved from virtual host; null if no server matches) |
 | `ping.server.motd` | Server MOTD (in MiniMessage format) |
 | `ping.server.player_count` | Current player count |
 | `ping.server.max_players` | Maximum players |
