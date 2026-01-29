@@ -7,12 +7,16 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * MiniMessage utility class following Adventure API standards.
  * 
  * <p>MiniMessage is a string-based format for representing Minecraft chat components.
  * This utility provides convenient methods for parsing and working with MiniMessage content.
+ * Legacy formatting codes (§ or & followed by 0-9a-fk-or or hex #rrggbb) are automatically
+ * converted to MiniMessage before parsing, so configs and templates can use either format.
  * 
  * <p>Example usage:
  * <pre>{@code
@@ -35,25 +39,64 @@ import java.util.Map;
  * @see <a href="https://docs.papermc.io/adventure/minimessage/">MiniMessage Documentation</a>
  */
 public final class MiniMessageUtil {
-    
+
     private static final MiniMessage MINI_MESSAGE = MiniMessage.miniMessage();
     private static final PlainTextComponentSerializer PLAIN_TEXT = PlainTextComponentSerializer.plainText();
-    
+
+    /** Legacy (§ or &) single-char format code. */
+    private static final Pattern LEGACY_SINGLE = Pattern.compile("(§|&)([0-9a-fk-orA-F])");
+    /** Legacy (§ or &) hex color. */
+    private static final Pattern LEGACY_HEX = Pattern.compile("(§|&)#([0-9a-fA-F]{6})");
+
+    private static final Map<String, String> LEGACY_TO_MINIMESSAGE = Map.ofEntries(
+        Map.entry("0", "<black>"), Map.entry("1", "<dark_blue>"), Map.entry("2", "<dark_green>"),
+        Map.entry("3", "<dark_aqua>"), Map.entry("4", "<dark_red>"), Map.entry("5", "<dark_purple>"),
+        Map.entry("6", "<gold>"), Map.entry("7", "<gray>"), Map.entry("8", "<dark_gray>"),
+        Map.entry("9", "<blue>"), Map.entry("a", "<green>"), Map.entry("b", "<aqua>"),
+        Map.entry("c", "<red>"), Map.entry("d", "<light_purple>"), Map.entry("e", "<yellow>"),
+        Map.entry("f", "<white>"), Map.entry("k", "<obfuscated>"), Map.entry("l", "<bold>"),
+        Map.entry("m", "<strikethrough>"), Map.entry("n", "<underlined>"), Map.entry("o", "<italic>"),
+        Map.entry("r", "<reset>")
+    );
+
     private MiniMessageUtil() {
         // Utility class - prevent instantiation
     }
-    
+
     /**
-     * Parses a MiniMessage formatted string into a Component.
+     * Converts legacy formatting codes (§ or &) to MiniMessage tags so that
+     * strings from configs or templates using legacy codes can be parsed by MiniMessage.
+     * Supports §/& followed by 0-9a-fk-or and §/&#rrggbb hex colors.
+     */
+    public static String convertLegacyToMiniMessage(String message) {
+        if (message == null || message.isEmpty()) {
+            return message;
+        }
+        // Hex colors first: §#rrggbb or &#rrggbb -> <#rrggbb>
+        String result = LEGACY_HEX.matcher(message).replaceAll("<#$2>");
+        // Single-char codes: §x or &x -> <tag>
+        Matcher m = LEGACY_SINGLE.matcher(result);
+        StringBuilder sb = new StringBuilder(result.length());
+        while (m.find()) {
+            String tag = LEGACY_TO_MINIMESSAGE.get(m.group(2).toLowerCase());
+            m.appendReplacement(sb, tag != null ? Matcher.quoteReplacement(tag) : m.group(0));
+        }
+        m.appendTail(sb);
+        return sb.toString();
+    }
+
+    /**
+     * Parses a MiniMessage or legacy (§/&) formatted string into a Component.
+     * Legacy codes are converted to MiniMessage before parsing.
      *
-     * @param message the MiniMessage formatted string
+     * @param message the MiniMessage or legacy formatted string
      * @return the parsed Component, or empty component if message is null/empty
      */
     public static Component parse(String message) {
         if (message == null || message.isEmpty()) {
             return Component.empty();
         }
-        return MINI_MESSAGE.deserialize(message);
+        return MINI_MESSAGE.deserialize(convertLegacyToMiniMessage(message));
     }
     
     /**
@@ -75,7 +118,7 @@ public final class MiniMessageUtil {
         if (message == null || message.isEmpty()) {
             return Component.empty();
         }
-        return MINI_MESSAGE.deserialize(message, resolvers);
+        return MINI_MESSAGE.deserialize(convertLegacyToMiniMessage(message), resolvers);
     }
     
     /**
@@ -100,8 +143,9 @@ public final class MiniMessageUtil {
         if (message == null || message.isEmpty()) {
             return Component.empty();
         }
+        String converted = convertLegacyToMiniMessage(message);
         if (placeholders == null || placeholders.isEmpty()) {
-            return MINI_MESSAGE.deserialize(message);
+            return MINI_MESSAGE.deserialize(converted);
         }
         
         TagResolver.Builder builder = TagResolver.builder();
@@ -109,7 +153,7 @@ public final class MiniMessageUtil {
             builder.resolver(Placeholder.unparsed(key, value != null ? value : ""))
         );
         
-        return MINI_MESSAGE.deserialize(message, builder.build());
+        return MINI_MESSAGE.deserialize(converted, builder.build());
     }
     
     /**
@@ -126,7 +170,7 @@ public final class MiniMessageUtil {
         if (message == null || message.isEmpty()) {
             return Component.empty();
         }
-        return MINI_MESSAGE.deserialize(message, Placeholder.unparsed(key, value != null ? value : ""));
+        return MINI_MESSAGE.deserialize(convertLegacyToMiniMessage(message), Placeholder.unparsed(key, value != null ? value : ""));
     }
     
     /**
@@ -143,20 +187,20 @@ public final class MiniMessageUtil {
         if (message == null || message.isEmpty()) {
             return Component.empty();
         }
-        return MINI_MESSAGE.deserialize(message, Placeholder.component(key, component));
+        return MINI_MESSAGE.deserialize(convertLegacyToMiniMessage(message), Placeholder.component(key, component));
     }
     
     /**
-     * Strips all MiniMessage formatting and returns plain text.
+     * Strips all MiniMessage or legacy formatting and returns plain text.
      *
-     * @param message the MiniMessage formatted string
+     * @param message the MiniMessage or legacy formatted string
      * @return the plain text without any formatting
      */
     public static String stripTags(String message) {
         if (message == null) {
             return null;
         }
-        return MINI_MESSAGE.stripTags(message);
+        return MINI_MESSAGE.stripTags(convertLegacyToMiniMessage(message));
     }
     
     /**
