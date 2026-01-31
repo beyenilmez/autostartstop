@@ -342,6 +342,7 @@ public final class ConfigParser {
             settings.setShutdownTimeout(section.getString("shutdown_timeout", "30s"));
             settings.setEmptyServerCheckInterval(section.getString("empty_server_check_interval", "5m"));
             settings.setMotdCacheInterval(section.getString("motd_cache_interval", "15m"));
+            settings.setCheckForUpdates(section.getBoolean("check_for_updates", true));
         }
         return settings;
     }

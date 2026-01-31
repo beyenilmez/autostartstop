@@ -20,6 +20,8 @@ settings:
   # Interval for caching MOTD responses for virtual hosts (for respond_ping action)
   # Set to 0 to disable periodic MOTD caching
   motd_cache_interval: 15m
+  # Check for plugin updates on startup. When true, notifies if a newer version is available.
+  check_for_updates: true
 
 # ============================================================================
 # DEFAULTS

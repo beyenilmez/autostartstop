@@ -7,6 +7,7 @@ public class SettingsConfig {
     private String shutdownTimeout = "30s";
     private String emptyServerCheckInterval = "5m";
     private String motdCacheInterval = "15m";
+    private boolean checkForUpdates = true;
 
     public SettingsConfig() {
     }
@@ -33,5 +34,13 @@ public class SettingsConfig {
 
     public void setMotdCacheInterval(String motdCacheInterval) {
         this.motdCacheInterval = motdCacheInterval;
+    }
+
+    public boolean isCheckForUpdates() {
+        return checkForUpdates;
+    }
+
+    public void setCheckForUpdates(boolean checkForUpdates) {
+        this.checkForUpdates = checkForUpdates;
     }
 }

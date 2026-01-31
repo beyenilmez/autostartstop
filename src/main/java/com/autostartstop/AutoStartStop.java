@@ -25,6 +25,7 @@ import com.autostartstop.template.TemplateRegistry;
 import com.autostartstop.trigger.TriggerContext;
 import com.autostartstop.trigger.TriggerRegistry;
 import com.autostartstop.metrics.MetricsManager;
+import com.autostartstop.update.UpdateChecker;
 import com.autostartstop.util.CommandExecutor;
 import com.autostartstop.util.DurationUtil;
 import com.autostartstop.util.TargetResolver;
@@ -112,6 +113,13 @@ public class AutoStartStop {
             // Register commands
             logger.debug("Phase 4/5: Registering commands...");
             registerCommands();
+
+            // Check for updates on startup (async, only if enabled in settings)
+            if (pluginConfig != null && pluginConfig.getSettings() != null
+                    && pluginConfig.getSettings().isCheckForUpdates()) {
+                String currentVersion = pluginContainer.getDescription().getVersion().orElse("0.0.0");
+                new UpdateChecker(currentVersion).checkAsync(null);
+            }
 
             logger.debug("Phase 5/5: Initialization complete");
             logger.info("AutoStartStop enabled successfully");

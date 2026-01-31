@@ -39,6 +39,9 @@ dependencies {
     // Gson for JSON parsing (used in pterodactyl control api)
     implementation(libs.gson)
     
+    // GitHub API for update checker (releases)
+    implementation(libs.github.api)
+    
     // bStats for metrics
     implementation(libs.bstats.velocity)
 }
@@ -52,8 +55,9 @@ tasks {
         archiveFileName = "${project.name}-${project.version}.jar"
         archiveClassifier = ""
         
-        // Relocate bstats to avoid conflicts
+        // Relocate to avoid conflicts with other plugins
         relocate("org.bstats", "${project.group}.bstats")
+        relocate("org.kohsuke", "${project.group}.githubapi.kohsuke")
     }
     
     jar {

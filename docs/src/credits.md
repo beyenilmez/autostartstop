@@ -16,6 +16,7 @@ AutoStartStop uses the following open-source libraries and frameworks:
 | [Result4j](https://github.com/sviperll/result4j) | 1.2.0 | Result type implementation for Java | Apache-2.0 |
 | [Cron Utils](https://github.com/jmrozanec/cron-utils) | 9.2.1 | Cron expression parsing and scheduling | Apache-2.0 |
 | [Gson](https://github.com/google/gson) | 2.13.2 | JSON parsing library | Apache-2.0 |
+| [GitHub API](https://github.com/hub4j/github-api) | 1.330 | GitHub API client for update checker | MIT |
 | [bStats](https://github.com/Bastian/bStats) | 3.1.0 | Metrics library | MIT |
 
 ## Documentation Tools

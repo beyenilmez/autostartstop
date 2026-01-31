@@ -9,6 +9,7 @@ settings:
   shutdown_timeout: 30s            # Maximum time to wait for pending actions during proxy shutdown
   empty_server_check_interval: 5m  # Interval for checking if servers are empty (for empty_server trigger)
   motd_cache_interval: 15m         # Interval for caching MOTD responses (for respond_ping action)
+  check_for_updates: true         # Check for plugin updates on startup
 ```
 
 ## Setting descriptions
@@ -48,3 +49,12 @@ MOTD responses are cached in two scenarios:
 If `motd_cache_interval` is set to `0`, only event-based caching (when the plugin stops a server) is performed, and interval-based caching is disabled.
 
 Caching MOTD allows you to respond with the same MOTD for a virtual host even if the server is offline.
+
+### `check_for_updates`
+
+Whether to check for plugin updates on startup.
+
+- **Type**: Boolean
+- **Default**: `true`
+
+When enabled, the plugin checks for a newer version when the proxy starts. If an update is available, a visible message is logged with the current version, the new version. Set to `false` to disable the startup update check.

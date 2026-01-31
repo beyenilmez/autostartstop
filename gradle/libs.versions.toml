@@ -7,6 +7,7 @@ velocity = "3.4.0-SNAPSHOT"
 
 # Libraries
 boostedYaml = "1.3.7"
+githubApi = "1.330"
 ampapi = "2620.4.0"
 result4j = "1.2.0"
 cronUtils = "9.2.1"
@@ -29,6 +30,7 @@ result4j = { group = "com.github.sviperll", name = "result4j", version.ref = "re
 
 # Utilities
 cron-utils = { group = "com.cronutils", name = "cron-utils", version.ref = "cronUtils" }
+github-api = { group = "org.kohsuke", name = "github-api", version.ref = "githubApi" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 
 # Metrics
