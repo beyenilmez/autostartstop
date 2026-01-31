@@ -99,7 +99,7 @@ public class ActionRegistry {
                 count++;
             }
         }
-        logger.info("Available action types: {} with built-in creators", count);
+        logger.debug("Available action types: {} with built-in creators", count);
         return count;
     }
 }

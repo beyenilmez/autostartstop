@@ -84,7 +84,6 @@ public class TriggerCommand implements SubCommand {
             return;
         }
 
-        source.sendMessage(MiniMessageUtil.parse("<yellow>Firing " + activatedCount + " manual trigger(s) with ID '" + triggerId + "'...</yellow>"));
         logger.debug("Manual trigger '{}' fired by {} with args: {} ({} triggers)", 
                 triggerId, source, Arrays.toString(triggerArgs), activatedCount);
 

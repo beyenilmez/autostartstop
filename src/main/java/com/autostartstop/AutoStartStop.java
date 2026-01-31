@@ -512,7 +512,10 @@ public class AutoStartStop {
                 logger.debug("Loading rules and activating triggers...");
                 ruleManager.loadRules(pluginConfig, ruleExecutor);
 
-                logger.info("Configuration reloaded");
+                logger.info("Configuration reloaded (version: {}, servers: {}, rules: {})", 
+                        pluginConfig.getVersion(), 
+                        pluginConfig.getServers() != null ? pluginConfig.getServers().size() : 0,
+                        pluginConfig.getRules() != null ? pluginConfig.getRules().size() : 0);
             } catch (IOException e) {
                 logger.error("Failed to reload configuration: {}", e.getMessage(), e);
                 throw new RuntimeException("Failed to reload configuration: " + e.getMessage(), e);

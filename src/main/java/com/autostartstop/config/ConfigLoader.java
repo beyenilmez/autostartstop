@@ -103,7 +103,6 @@ public class ConfigLoader {
         if (configDocument != null) {
             configDocument.reload();
             pluginConfig = parseConfig();
-            logger.info("Configuration reloaded (version: {})", pluginConfig.getVersion());
         } else {
             return load();
         }

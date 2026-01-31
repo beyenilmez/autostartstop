@@ -12,6 +12,8 @@ import net.kyori.adventure.text.Component;
 import org.slf4j.Logger;
 
 import java.io.*;
+import java.net.ConnectException;
+import java.net.NoRouteToHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
@@ -77,10 +79,10 @@ public class MotdCacheManager {
                     .repeat(cacheInterval)
                     .schedule();
             
-            logger.info("MOTD cache manager started with periodic updates (interval: {})", 
+            logger.debug("MOTD cache manager started with periodic updates (interval: {})", 
                     DurationUtil.format(cacheInterval));
         } else {
-            logger.info("MOTD cache manager started (initial cache only, no periodic updates)");
+            logger.debug("MOTD cache manager started (initial cache only, no periodic updates)");
         }
     }
     
@@ -164,7 +166,7 @@ public class MotdCacheManager {
             // Cache the MOTD
             motdCache.put(cacheKey, motd);
             
-            logger.debug("Cached MOTD for key '{}' (server: '{}') before stop: motd='{}'", 
+            logger.debug("Cached MOTD for key '{}' (server: '{}'): motd='{}'", 
                     cacheKey, serverName, motd);
             
             // Save cache to file asynchronously
@@ -172,8 +174,15 @@ public class MotdCacheManager {
             
             return true;
         } catch (Exception e) {
-            logger.warn("Failed to cache MOTD for key '{}' (server: '{}') before stop: {}", 
-                    cacheKey, serverName, e.getMessage());
+            Throwable cause = (e.getCause() != null) ? e.getCause() : e;
+
+            if (cause instanceof ConnectException || cause instanceof NoRouteToHostException) {
+                logger.debug("Failed to cache MOTD for key '{}' (server: '{}') (server offline): {}", 
+                        cacheKey, serverName, e.getMessage());
+            } else {
+                logger.warn("Failed to cache MOTD for key '{}' (server: '{}') : {}", 
+                        cacheKey, serverName, e.getMessage());
+            }
             logger.debug("MOTD cache error details:", e);
             return false;
         }
@@ -231,8 +240,15 @@ public class MotdCacheManager {
                         cacheKey, serverName, motd);
                 
             } catch (Exception e) {
-                logger.warn("Failed to cache MOTD for key '{}' (server: '{}'): {}", 
-                        cacheKey, serverName, e.getMessage());
+                Throwable cause = (e.getCause() != null) ? e.getCause() : e;
+                
+                if (cause instanceof ConnectException || cause instanceof NoRouteToHostException) {
+                    logger.debug("Failed to cache MOTD for key '{}' (server: '{}') (server offline): {}", 
+                            cacheKey, serverName, e.getMessage());
+                } else {
+                    logger.warn("Failed to cache MOTD for key '{}' (server: '{}'): {}", 
+                            cacheKey, serverName, e.getMessage());
+                }
                 logger.debug("MOTD cache error details:", e);
                 failed++;
             }

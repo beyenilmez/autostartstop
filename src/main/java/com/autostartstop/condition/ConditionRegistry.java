@@ -110,7 +110,7 @@ public class ConditionRegistry {
                 count++;
             }
         }
-        logger.info("Available condition types: {} with built-in creators", count);
+        logger.debug("Available condition types: {} with built-in creators", count);
         return count;
     }
 }

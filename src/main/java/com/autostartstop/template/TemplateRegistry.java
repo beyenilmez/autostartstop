@@ -99,7 +99,7 @@ public class TemplateRegistry {
                 count++;
             }
         }
-        logger.info("Available template types: {} with built-in creators", count);
+        logger.debug("Available template types: {} with built-in creators", count);
         return count;
     }
 }

@@ -85,7 +85,7 @@ public class ServerControlApiRegistry {
                 count++;
             }
         }
-        logger.info("Available control API types: {} with built-in creators", count);
+        logger.debug("Available control API types: {} with built-in creators", count);
         return count;
     }
 }

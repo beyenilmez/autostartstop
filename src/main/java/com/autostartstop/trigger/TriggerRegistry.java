@@ -99,7 +99,7 @@ public class TriggerRegistry {
                 count++;
             }
         }
-        logger.info("Available trigger types: {} with built-in creators", count);
+        logger.debug("Available trigger types: {} with built-in creators", count);
         return count;
     }
 }
