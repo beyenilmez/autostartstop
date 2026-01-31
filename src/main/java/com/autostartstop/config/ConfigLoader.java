@@ -10,8 +10,10 @@ import dev.dejvokep.boostedyaml.settings.loader.LoaderSettings;
 import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
 import org.slf4j.Logger;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -24,7 +26,10 @@ import java.util.Set;
  */
 public class ConfigLoader {
     private static final Logger logger = Log.get(ConfigLoader.class);
-    
+
+    /** Config version for YamlDocument updater (version migration). Must match version in config.yml. */
+    private static final int CONFIG_VERSION = 1;
+
     private final Path dataDirectory;
     private final ConfigMerger configMerger;
     private YamlDocument configDocument;
@@ -66,15 +71,13 @@ public class ConfigLoader {
             }
         }
 
-        // Load default config stream for updater (version migration)
-        InputStream defaultConfig = getClass().getResourceAsStream("/config.yml");
-        if (defaultConfig == null) {
-            throw new IOException("Default config.yml not found in resources");
-        }
+        // Minimal default for YamlDocument updater (only version is needed for migration)
+        InputStream defaultForUpdater = new ByteArrayInputStream(
+                ("version: " + CONFIG_VERSION + "\n").getBytes(StandardCharsets.UTF_8));
 
         configDocument = YamlDocument.create(
                 configPath.toFile(),
-                defaultConfig,
+                defaultForUpdater,
                 GeneralSettings.DEFAULT,
                 LoaderSettings.builder().setAutoUpdate(true).build(),
                 DumperSettings.DEFAULT,
