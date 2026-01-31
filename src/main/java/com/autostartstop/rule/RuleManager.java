@@ -61,17 +61,17 @@ public class RuleManager {
             String name = entry.getKey();
             RuleConfig ruleConfig = entry.getValue();
 
+            // Skip disabled rules
+            if (!ruleConfig.isEnabled()) {
+                logger.debug("Rule '{}' is disabled, skipping...", name);
+                disabledCount++;
+                continue;
+            }
+
             try {
                 logger.debug("Loading rule '{}'...", name);
                 Rule rule = createRule(name, ruleConfig);
                 rules.put(name, rule);
-
-                // Check if rule is enabled
-                if (!ruleConfig.isEnabled()) {
-                    logger.debug("Rule '{}' is disabled, skipping activation", name);
-                    disabledCount++;
-                    continue;
-                }
 
                 // Index manual triggers by ID for TriggerCommand lookup (only for normal rules)
                 if (!rule.isTemplateRule() && rule.getTriggers() != null) {
