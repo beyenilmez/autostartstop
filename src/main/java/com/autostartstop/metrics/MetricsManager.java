@@ -39,7 +39,7 @@ public class MetricsManager {
         this.metrics = metricsFactory.make(plugin, BSTATS_PLUGIN_ID);
         
         registerCustomCharts();
-        logger.info("bStats metrics enabled - anonymous usage statistics will be collected.");
+        logger.debug("MetricsManager initialized");
     }
 
     /**
