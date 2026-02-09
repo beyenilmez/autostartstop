@@ -84,6 +84,13 @@ rules: { ... }     # What should happen under which circumstances.
 
 Full documentation is available at: **https://beyenilmez.github.io/autostartstop/**
 
+### AI-friendly documentation
+
+The documentation is also available in an LLM-friendly format following the [llms.txt](https://llmstxt.org/) standard. Use these files with any AI assistant to ask questions or generate configurations:
+
+- [llms.txt](https://beyenilmez.github.io/autostartstop/llms.txt) — Structured index of all documentation pages
+- [llms-full.txt](https://beyenilmez.github.io/autostartstop/llms-full.txt) — Full documentation content in a single file
+
 ## Statistics
 
 This plugin uses [bStats](https://bstats.org/docs/server-owners) to collect anonymous usage statistics. You can opt out by editing `plugins/bStats/config.txt`.

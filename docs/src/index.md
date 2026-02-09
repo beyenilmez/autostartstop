@@ -39,6 +39,16 @@ rules: { ... }     # What should happen under which circumstances.
 - **Graceful shutdown**: On proxy shutdown, stop selected servers with warning messages to players.
 - **Scheduled rewards**: Send hourly rewards or messages to players using cron triggers.
 
+## AI-friendly documentation
+
+This documentation is available in an LLM-friendly format following the [llms.txt](https://llmstxt.org/) standard. You can use these files with any AI assistant (ChatGPT, Claude, Gemini, etc.) to ask questions about AutoStartStop or generate configurations:
+
+- **[llms.txt](https://beyenilmez.github.io/autostartstop/llms.txt)**: Structured index of all documentation pages
+- **[llms-full.txt](https://beyenilmez.github.io/autostartstop/llms-full.txt)**: Full documentation content in a single file
+
+!!! tip "Generate configurations with AI"
+    Copy the [llms-full.txt](https://beyenilmez.github.io/autostartstop/llms-full.txt) URL and paste it into your preferred AI assistant, then ask it to help you create or troubleshoot your `config.yml`.
+
 ## Statistics
 
 This plugin uses [bStats](https://bstats.org/docs/server-owners) to collect anonymous usage statistics. You can opt out by editing `plugins/bStats/config.txt`.
