@@ -1,0 +1,11 @@
+enhancement:
+  - head-branch: ['^enhancement/', '^feat/', '^feature/']
+
+bug:
+  - head-branch: ['^bug/', '^fix/', '^bugfix/']
+
+documentation:
+  - head-branch: ['^documentation/', '^docs/']
+
+breaking:
+  - head-branch: ['!/']
