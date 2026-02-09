@@ -1,0 +1,52 @@
+name: Support / Question
+description: Ask for help with configuration or usage
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Need help setting up or configuring AutoStartStop? Please provide as much detail as possible so we can assist you.
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: What do you need help with?
+    validations:
+      required: true
+
+  - type: textarea
+    id: config
+    attributes:
+      label: Relevant Configuration
+      description: Paste the relevant parts of your config.yml (remove any sensitive information like API keys or passwords).
+      render: yaml
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Logs
+      description: Paste any relevant log output here.
+      render: text
+    validations:
+      required: false
+
+  - type: input
+    id: version
+    attributes:
+      label: Plugin Version
+      description: What version of AutoStartStop are you using?
+      placeholder: e.g. 1.0.0
+    validations:
+      required: false
+
+  - type: input
+    id: velocity-version
+    attributes:
+      label: Velocity Version
+      description: What version of Velocity are you running?
+      placeholder: e.g. 3.4.0
+    validations:
+      required: false
