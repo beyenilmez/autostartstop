@@ -14,6 +14,10 @@ cronUtils = "9.2.1"
 gson = "2.13.2"
 bstats = "3.1.0"
 
+# Testing
+junit = "6.0.2"
+mockito = "5.21.0"
+
 # Plugins
 shadow = "9.3.1"
 
@@ -35,6 +39,12 @@ gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 
 # Metrics
 bstats-velocity = { group = "org.bstats", name = "bstats-velocity", version.ref = "bstats" }
+
+# Testing
+junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit" }
+junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform-launcher", version.ref = "junit" }
+mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
+mockito-junit-jupiter = { group = "org.mockito", name = "mockito-junit-jupiter", version.ref = "mockito" }
 
 [bundles]
 amp = ["ampapi", "result4j"]

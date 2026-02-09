@@ -44,9 +44,22 @@ dependencies {
     
     // bStats for metrics
     implementation(libs.bstats.velocity)
+    
+    // Testing
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.junit.jupiter)
+    testRuntimeOnly(libs.junit.platform.launcher)
+    
+    // Velocity API needed at test time for Adventure components
+    testImplementation(libs.velocity.api)
 }
 
 tasks {
+    test {
+        useJUnitPlatform()
+    }
+    
     withType<JavaCompile>().configureEach {
         options.encoding = "UTF-8"
     }
