@@ -100,6 +100,87 @@ plugins:
         - offline
         - minify:
             minify_html: true
+        - llmstxt:
+            markdown_description: |
+              AutoStartStop is a Velocity proxy plugin that automates Minecraft server management through a YAML-based, rule-driven configuration system. You define rules composed of triggers (player connections, cron schedules, proxy lifecycle, pings, empty server detection etc.), optional conditions (server status, player counts, comparisons etc.), and actions (start/stop/restart servers, connect/disconnect players, send messages, manage bossbars, customize ping responses, execute shell commands etc.). It supports multiple server control APIs (Shell commands, AMP API, Pterodactyl Panel API etc.). Built-in templates provide ready-to-use patterns for common scenarios like auto-start on connect, auto-stop when idle, and custom MOTD responses etc. All configuration lives in a single config.yml file with dynamic variable support.
+            full_output: llms-full.txt
+            sections:
+              Overview:
+                - index.md
+              Getting Started:
+                - getting-started/index.md
+                - getting-started/installation.md
+                - getting-started/basic-concepts.md
+              Commands:
+                - commands.md
+              Configuration:
+                - configuration/index.md
+                - configuration/settings.md
+                - configuration/defaults.md
+                - configuration/servers.md
+                - configuration/rules.md
+              Control API:
+                - control-api/index.md
+                - control-api/shell.md
+                - control-api/amp.md
+                - control-api/pterodactyl.md
+              Variables:
+                - variables.md
+              Triggers:
+                - triggers/index.md
+                - triggers/proxy-start.md
+                - triggers/proxy-shutdown.md
+                - triggers/connection.md
+                - triggers/empty-server.md
+                - triggers/cron.md
+                - triggers/ping.md
+                - triggers/manual.md
+              Conditions:
+                - conditions/index.md
+                - conditions/server-status.md
+                - conditions/player-count.md
+                - conditions/string-equals.md
+                - conditions/number-compare.md
+              Actions:
+                - actions/index.md
+                - actions/server-management/start.md
+                - actions/server-management/stop.md
+                - actions/server-management/restart.md
+                - actions/server-management/send-command.md
+                - actions/player-management/connect.md
+                - actions/player-management/disconnect.md
+                - actions/player-management/allow-connection.md
+                - actions/player-communication/send-message.md
+                - actions/player-communication/send-action-bar.md
+                - actions/player-communication/send-title.md
+                - actions/player-communication/clear-title.md
+                - actions/player-communication/show-bossbar.md
+                - actions/player-communication/hide-bossbar.md
+                - actions/ping-management/deny-ping.md
+                - actions/ping-management/allow-ping.md
+                - actions/ping-management/respond-ping.md
+                - actions/control-flow/if.md
+                - actions/control-flow/while.md
+                - actions/utility/sleep.md
+                - actions/utility/log.md
+                - actions/utility/exec.md
+              Templates:
+                - rule-templates/index.md
+                - rule-templates/start-on-proxy-start.md
+                - rule-templates/stop-on-proxy-shutdown.md
+                - rule-templates/start-on-connection.md
+                - rule-templates/stop-on-empty.md
+                - rule-templates/respond-ping.md
+              Examples:
+                - examples/index.md
+                - examples/auto-start-stop-with-custom-ping-response.md
+                - examples/scheduled-restart-with-proxy-start.md
+                - examples/hourly-random-reward.md
+              Guides:
+                - guides/index.md
+                - guides/amp-user-setup.md
+              Credits:
+                - credits.md
   - search
   - include-markdown:
       rewrite_relative_urls: true

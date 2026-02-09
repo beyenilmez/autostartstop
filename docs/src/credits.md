@@ -32,12 +32,13 @@ The following libraries are used for testing:
 
 The documentation for AutoStartStop is built using the following tools and frameworks:
 
-| Tool | Description | License |
-|------|-------------|---------|
-| [MkDocs](https://www.mkdocs.org/) | Static site generator for project documentation | BSD-2-Clause |
-| [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/) | Material Design theme for MkDocs | MIT |
-| [MkDocs Minify Plugin](https://github.com/byrnereese/mkdocs-minify-plugin) | Plugin for minifying HTML output | MIT |
-| [MkDocs Include Markdown Plugin](https://github.com/mondeja/mkdocs-include-markdown-plugin) | Plugin for including markdown files in MkDocs | Apache-2.0 |
+| Tool | Version | Description | License |
+|------|---------|-------------|---------|
+| [MkDocs](https://www.mkdocs.org/) | 1.6.1 | Static site generator for project documentation | BSD-2-Clause |
+| [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/) | 9.7.1 | Material Design theme for MkDocs | MIT |
+| [MkDocs Minify Plugin](https://github.com/byrnereese/mkdocs-minify-plugin) | 0.8.0 | Plugin for minifying HTML output | MIT |
+| [MkDocs Include Markdown Plugin](https://github.com/mondeja/mkdocs-include-markdown-plugin) | 7.2.1 | Plugin for including markdown files in MkDocs | Apache-2.0 |
+| [MkDocs LLMsTxt Plugin](https://github.com/pawamoy/mkdocs-llmstxt) | 0.5.0 | Plugin for generating AI-friendly documentation | ISC |
 
 ## Additional Resources
 
