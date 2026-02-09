@@ -77,8 +77,7 @@ public class ConfigMerger {
 
         StartupTimerConfig merged = new StartupTimerConfig();
         merged.setExpectedStartupTime(coalesce(specific.getExpectedStartupTime(), defaults.getExpectedStartupTime()));
-        merged.setAutoCalculateExpectedStartupTime(
-                specific.isAutoCalculateExpectedStartupTime() || defaults.isAutoCalculateExpectedStartupTime());
+        merged.setAutoCalculateExpectedStartupTime(coalesce(specific.isAutoCalculateExpectedStartupTime(), defaults.isAutoCalculateExpectedStartupTime()));
         return merged;
     }
 
