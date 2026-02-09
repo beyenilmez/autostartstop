@@ -19,6 +19,15 @@ AutoStartStop uses the following open-source libraries and frameworks:
 | [GitHub API](https://github.com/hub4j/github-api) | 1.330 | GitHub API client for update checker | MIT |
 | [bStats](https://github.com/Bastian/bStats) | 3.1.0 | Metrics library | MIT |
 
+## Testing Libraries
+
+The following libraries are used for testing:
+
+| Library | Version | Description | License |
+|---------|---------|-------------|---------|
+| [JUnit](https://github.com/junit-team/junit-framework) | 6.0.2 | Unit testing framework for Java | EPL-2.0 |
+| [Mockito](https://github.com/mockito/mockito) | 5.21.0 | Mocking framework for unit tests | MIT |
+
 ## Documentation Tools
 
 The documentation for AutoStartStop is built using the following tools and frameworks:
