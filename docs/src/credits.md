@@ -10,7 +10,7 @@ AutoStartStop uses the following open-source libraries and frameworks:
 
 | Library | Version | Description | License |
 |---------|---------|-------------|---------|
-| [Velocity API](https://github.com/PaperMC/Velocity) | 3.4.0-SNAPSHOT | Velocity proxy framework API | GPL-3.0 |
+| [Velocity API](https://github.com/PaperMC/Velocity) | 3.4.0 | Velocity proxy framework API | GPL-3.0 |
 | [BoostedYAML](https://github.com/dejvokep/boosted-yaml) | 1.3.7 | Configuration management library | Apache-2.0 |
 | [AMP API](https://github.com/p0t4t0sandwich/ampapi/blob/main/readmes/Java.md) | 2620.4.0 | AMP API library | MIT |
 | [Result4j](https://github.com/sviperll/result4j) | 1.2.0 | Result type implementation for Java | Apache-2.0 |
