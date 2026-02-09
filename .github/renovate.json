@@ -1,0 +1,24 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": [
+      "config:recommended",
+      "helpers:pinGithubActionDigests",
+      ":configMigration"
+    ],
+  
+    "ignorePaths": ["docs/requirements-lock.txt"],
+    "packageRules": [
+      {
+        "description": "Docs dependencies: show on dashboard only, no automatic PRs",
+        "matchFileNames": ["docs/**"],
+        "dependencyDashboardApproval": true
+      },
+      {
+        "description": "Group non-major Gradle library updates",
+        "matchFileNames": ["gradle/libs.versions.toml"],
+        "matchUpdateTypes": ["minor", "patch"],
+        "groupName": "Gradle dependencies (non-major)"
+      }
+    ]
+  }
+  
