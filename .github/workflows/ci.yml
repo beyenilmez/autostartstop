@@ -3,18 +3,22 @@ name: CI
 on:
   push:
     branches: [main]
-    paths-ignore:
-      - 'docs/**'
-      - '*.md'
-      - 'LICENSE'
-      - '.github/workflows/docs.yml'
+    paths:
+      - '**'
+      - '!docs/**'
+      - '!*.md'
+      - '!LICENSE'
+      - '!.github/**'
+      - '.github/workflows/ci.yml'
   pull_request:
     branches: [main]
-    paths-ignore:
-      - 'docs/**'
-      - '*.md'
-      - 'LICENSE'
-      - '.github/workflows/docs.yml'
+    paths:
+      - '**'
+      - '!docs/**'
+      - '!*.md'
+      - '!LICENSE'
+      - '!.github/**'
+      - '.github/workflows/ci.yml'
   workflow_dispatch:
     inputs:
       release:
