@@ -63,21 +63,21 @@ theme:
   palette:
     - media: "(prefers-color-scheme)"
       toggle:
-        icon: material/link
+        icon: material/brightness-auto
         name: Switch to light mode
     - media: "(prefers-color-scheme: light)"
       scheme: default
       primary: indigo
       accent: indigo
       toggle:
-        icon: material/toggle-switch
+        icon: material/weather-sunny
         name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
       primary: black
       accent: indigo
       toggle:
-        icon: material/toggle-switch-off
+        icon: material/weather-night
         name: Switch to system preference
   font:
     text: Roboto
@@ -106,81 +106,81 @@ plugins:
             full_output: llms-full.txt
             sections:
               Overview:
-                - index.md
+                - index.md: Plugin overview, key features, and example use cases
               Getting Started:
-                - getting-started/index.md
-                - getting-started/installation.md
-                - getting-started/basic-concepts.md
+                - getting-started/index.md: Quick start guide for first-time setup
+                - getting-started/installation.md: Download and installation instructions
+                - getting-started/basic-concepts.md: Core concepts — rules, triggers, conditions, actions, servers, and templates
               Commands:
-                - commands.md
+                - commands.md: Available plugin commands and permissions
               Configuration:
-                - configuration/index.md
-                - configuration/settings.md
-                - configuration/defaults.md
-                - configuration/servers.md
-                - configuration/rules.md
+                - configuration/index.md: Configuration file structure and reloading
+                - configuration/settings.md: Global plugin settings (timeouts, intervals, etc.)
+                - configuration/defaults.md: Default values merged into all server configurations
+                - configuration/servers.md: Server definitions, control API, ping, and startup timer settings
+                - configuration/rules.md: Rule structure — triggers, conditions, actions, and templates
               Control API:
-                - control-api/index.md
-                - control-api/shell.md
-                - control-api/amp.md
-                - control-api/pterodactyl.md
+                - control-api/index.md: Overview of server control methods
+                - control-api/shell.md: Shell command control API configuration
+                - control-api/amp.md: AMP panel control API configuration
+                - control-api/pterodactyl.md: Pterodactyl panel control API configuration
               Variables:
-                - variables.md
+                - variables.md: Variable syntax, context variables, global server variables, and nested resolution
               Triggers:
-                - triggers/index.md
-                - triggers/proxy-start.md
-                - triggers/proxy-shutdown.md
-                - triggers/connection.md
-                - triggers/empty-server.md
-                - triggers/cron.md
-                - triggers/ping.md
-                - triggers/manual.md
+                - triggers/index.md: Overview of all trigger types
+                - triggers/proxy-start.md: Fires when the Velocity proxy starts
+                - triggers/proxy-shutdown.md: Fires when the Velocity proxy shuts down
+                - triggers/connection.md: Fires when a player connects to a server
+                - triggers/empty-server.md: Fires when a server has been empty for a duration
+                - triggers/cron.md: Fires on a cron schedule
+                - triggers/ping.md: Fires when a client pings the proxy (server list/MOTD)
+                - triggers/manual.md: Fires via the /autostartstop trigger command
               Conditions:
-                - conditions/index.md
-                - conditions/server-status.md
-                - conditions/player-count.md
-                - conditions/string-equals.md
-                - conditions/number-compare.md
+                - conditions/index.md: Overview of all condition types and evaluation modes
+                - conditions/server-status.md: Check if a server is online or offline
+                - conditions/player-count.md: Check the player count on a server
+                - conditions/string-equals.md: Compare two string values
+                - conditions/number-compare.md: Compare two numeric values
               Actions:
-                - actions/index.md
-                - actions/server-management/start.md
-                - actions/server-management/stop.md
-                - actions/server-management/restart.md
-                - actions/server-management/send-command.md
-                - actions/player-management/connect.md
-                - actions/player-management/disconnect.md
-                - actions/player-management/allow-connection.md
-                - actions/player-communication/send-message.md
-                - actions/player-communication/send-action-bar.md
-                - actions/player-communication/send-title.md
-                - actions/player-communication/clear-title.md
-                - actions/player-communication/show-bossbar.md
-                - actions/player-communication/hide-bossbar.md
-                - actions/ping-management/deny-ping.md
-                - actions/ping-management/allow-ping.md
-                - actions/ping-management/respond-ping.md
-                - actions/control-flow/if.md
-                - actions/control-flow/while.md
-                - actions/utility/sleep.md
-                - actions/utility/log.md
-                - actions/utility/exec.md
+                - actions/index.md: Overview of all action types
+                - actions/server-management/start.md: Start a server
+                - actions/server-management/stop.md: Stop a server
+                - actions/server-management/restart.md: Restart a server
+                - actions/server-management/send-command.md: Send a command to a server console
+                - actions/player-management/connect.md: Connect a player to a server
+                - actions/player-management/disconnect.md: Disconnect players from the proxy
+                - actions/player-management/allow-connection.md: Allow a previously denied connection
+                - actions/player-communication/send-message.md: Send a chat message to players
+                - actions/player-communication/send-action-bar.md: Send an action bar message to players
+                - actions/player-communication/send-title.md: Send a title and subtitle to players
+                - actions/player-communication/clear-title.md: Clear a player's title
+                - actions/player-communication/show-bossbar.md: Show a bossbar to players
+                - actions/player-communication/hide-bossbar.md: Hide a bossbar from players
+                - actions/ping-management/deny-ping.md: Deny a ping request
+                - actions/ping-management/allow-ping.md: Allow a ping request to proceed normally
+                - actions/ping-management/respond-ping.md: Respond to a ping with a custom MOTD
+                - actions/control-flow/if.md: Conditional action execution
+                - actions/control-flow/while.md: Loop while a condition is true
+                - actions/utility/sleep.md: Wait for a duration before continuing
+                - actions/utility/log.md: Log a message to the console
+                - actions/utility/exec.md: Execute a shell command
               Templates:
-                - rule-templates/index.md
-                - rule-templates/start-on-proxy-start.md
-                - rule-templates/stop-on-proxy-shutdown.md
-                - rule-templates/start-on-connection.md
-                - rule-templates/stop-on-empty.md
-                - rule-templates/respond-ping.md
+                - rule-templates/index.md: Overview of built-in rule templates
+                - rule-templates/start-on-proxy-start.md: Template to start servers when the proxy starts
+                - rule-templates/stop-on-proxy-shutdown.md: Template to stop servers when the proxy shuts down
+                - rule-templates/start-on-connection.md: Template to start a server when a player connects
+                - rule-templates/stop-on-empty.md: Template to stop servers after being empty for a duration
+                - rule-templates/respond-ping.md: Template to customize ping/MOTD responses
               Examples:
-                - examples/index.md
-                - examples/auto-start-stop-with-custom-ping-response.md
-                - examples/scheduled-restart-with-proxy-start.md
-                - examples/hourly-random-reward.md
+                - examples/index.md: Overview of example configurations
+                - examples/auto-start-stop-with-custom-ping-response.md: Auto start/stop with custom MOTD based on server status
+                - examples/scheduled-restart-with-proxy-start.md: Auto start on proxy startup and scheduled restarts via cron
+                - examples/hourly-random-reward.md: Scheduled command execution to reward random players
               Guides:
-                - guides/index.md
-                - guides/amp-user-setup.md
+                - guides/index.md: Overview of available guides
+                - guides/amp-user-setup.md: How to set up an AMP user for the control API
               Credits:
-                - credits.md
+                - credits.md: License, third-party libraries, and documentation tools
   - search
   - include-markdown:
       rewrite_relative_urls: true

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+{{ super() }}
+
+<a id="chatgpt-fab"
+   href="https://chatgpt.com/g/g-698a52fec05c819192d57a9b7358d30d-autostartstop-assistant"
+   target="_blank"
+   rel="noopener noreferrer"
+   title="Ask AI Assistant"
+   aria-label="Ask AI Assistant">
+  {% include ".icons/material/creation.svg" %}
+</a>
+
+<style>
+  #chatgpt-fab {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--md-accent-fg-color);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .3);
+    text-decoration: none;
+    transition: opacity .2s;
+  }
+  #chatgpt-fab:hover { opacity: .8; }
+  #chatgpt-fab svg { width: 24px; height: 24px; fill: currentColor; }
+</style>
+{% endblock %}
