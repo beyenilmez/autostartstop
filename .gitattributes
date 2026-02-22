@@ -1,2 +1,36 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Binary files
+*.jar binary
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+
+# SVG handling
+*.svg text
+
+# Linux/CI shell scripts
+gradlew text eol=lf
+
+# Windows batch files
+*.bat text eol=crlf
+
+# Java and build scripts
+*.java text eol=lf
+*.kts text eol=lf
+
+# Config and data files
+*.yml text eol=lf
+*.toml text eol=lf
+*.json text eol=lf
+*.properties text eol=lf
+
+# Documentation and text
+*.md text eol=lf
+*.txt text eol=lf
+*.html text eol=lf
+
+# GitHub language stats
+docs/* linguist-documentation
