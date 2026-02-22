@@ -64,7 +64,7 @@ rules: { ... }     # What should happen under which circumstances.
 
 ## Requirements
 
-- **Velocity 3.4.0**
+- **Velocity 3.4.0** or higher
 - **Java 21** or higher
 
 ## Installation
