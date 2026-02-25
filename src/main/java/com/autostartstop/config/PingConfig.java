@@ -1,28 +1,25 @@
 package com.autostartstop.config;
 
-/**
- * Configuration for server ping settings.
- */
+/** Configuration for server ping settings. */
 public class PingConfig {
-    private String timeout;
-    private String method;
+  private String timeout;
+  private String method;
 
-    public PingConfig() {
-    }
+  public PingConfig() {}
 
-    public String getTimeout() {
-        return timeout;
-    }
+  public String getTimeout() {
+    return timeout;
+  }
 
-    public void setTimeout(String timeout) {
-        this.timeout = timeout;
-    }
+  public void setTimeout(String timeout) {
+    this.timeout = timeout;
+  }
 
-    public String getMethod() {
-        return method;
-    }
+  public String getMethod() {
+    return method;
+  }
 
-    public void setMethod(String method) {
-        this.method = method;
-    }
+  public void setMethod(String method) {
+    this.method = method;
+  }
 }

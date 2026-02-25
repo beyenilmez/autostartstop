@@ -8,8 +8,6 @@ import dev.dejvokep.boostedyaml.settings.dumper.DumperSettings;
 import dev.dejvokep.boostedyaml.settings.general.GeneralSettings;
 import dev.dejvokep.boostedyaml.settings.loader.LoaderSettings;
 import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
-import org.slf4j.Logger;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,232 +17,229 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import org.slf4j.Logger;
 
 /**
- * Loads and parses the plugin configuration using BoostedYAML.
- * Uses ConfigParser for parsing individual configuration sections.
+ * Loads and parses the plugin configuration using BoostedYAML. Uses ConfigParser for parsing
+ * individual configuration sections.
  */
 public class ConfigLoader {
-    private static final Logger logger = Log.get(ConfigLoader.class);
+  private static final Logger logger = Log.get(ConfigLoader.class);
 
-    /** Config version for YamlDocument updater (version migration). Must match version in config.yml. */
-    private static final int CONFIG_VERSION = 1;
+  /**
+   * Config version for YamlDocument updater (version migration). Must match version in config.yml.
+   */
+  private static final int CONFIG_VERSION = 1;
 
-    private final Path dataDirectory;
-    private final ConfigMerger configMerger;
-    private YamlDocument configDocument;
-    private PluginConfig pluginConfig;
+  private final Path dataDirectory;
+  private final ConfigMerger configMerger;
+  private YamlDocument configDocument;
+  private PluginConfig pluginConfig;
 
-    public ConfigLoader(Path dataDirectory) {
-        this.dataDirectory = dataDirectory;
-        this.configMerger = new ConfigMerger();
+  public ConfigLoader(Path dataDirectory) {
+    this.dataDirectory = dataDirectory;
+    this.configMerger = new ConfigMerger();
+  }
+
+  /**
+   * Loads the configuration from file.
+   *
+   * @return The loaded plugin configuration
+   * @throws IOException if the configuration cannot be loaded
+   */
+  public PluginConfig load() throws IOException {
+    logger.debug("Starting configuration load process...");
+
+    // Ensure data directory exists
+    if (!Files.exists(dataDirectory)) {
+      logger.debug("Creating data directory: {}", dataDirectory);
+      Files.createDirectories(dataDirectory);
     }
 
-    /**
-     * Loads the configuration from file.
-     *
-     * @return The loaded plugin configuration
-     * @throws IOException if the configuration cannot be loaded
-     */
-    public PluginConfig load() throws IOException {
-        logger.debug("Starting configuration load process...");
-        
-        // Ensure data directory exists
-        if (!Files.exists(dataDirectory)) {
-            logger.debug("Creating data directory: {}", dataDirectory);
-            Files.createDirectories(dataDirectory);
+    Path configPath = dataDirectory.resolve("config.yml");
+    logger.debug("Configuration file path: {}", configPath);
+
+    // When config does not exist, copy the default config from resources directly
+    // so the file on disk matches config.yml exactly (comments, order, formatting).
+    boolean configExists = Files.exists(configPath);
+    if (!configExists) {
+      try (InputStream defaultConfigStream = getClass().getResourceAsStream("/config.yml")) {
+        if (defaultConfigStream == null) {
+          throw new IOException("Default config.yml not found in resources");
         }
-
-        Path configPath = dataDirectory.resolve("config.yml");
-        logger.debug("Configuration file path: {}", configPath);
-
-        // When config does not exist, copy the default config from resources directly
-        // so the file on disk matches config.yml exactly (comments, order, formatting).
-        boolean configExists = Files.exists(configPath);
-        if (!configExists) {
-            try (InputStream defaultConfigStream = getClass().getResourceAsStream("/config.yml")) {
-                if (defaultConfigStream == null) {
-                    throw new IOException("Default config.yml not found in resources");
-                }
-                Files.copy(defaultConfigStream, configPath);
-                logger.debug("Copied default config.yml from resources");
-            }
-        }
-
-        // Minimal default for YamlDocument updater (only version is needed for migration)
-        InputStream defaultForUpdater = new ByteArrayInputStream(
-                ("version: " + CONFIG_VERSION + "\n").getBytes(StandardCharsets.UTF_8));
-
-        configDocument = YamlDocument.create(
-                configPath.toFile(),
-                defaultForUpdater,
-                GeneralSettings.DEFAULT,
-                LoaderSettings.builder().setAutoUpdate(true).build(),
-                DumperSettings.DEFAULT,
-                UpdaterSettings.builder().setVersioning(new BasicVersioning("version")).build()
-        );
-        
-        logger.debug(configExists ? "Loaded existing config" : "Loaded newly created config");
-
-        // Parse the configuration
-        pluginConfig = parseConfig();
-        logger.info("Configuration loaded (version: {}, servers: {}, rules: {})",
-                pluginConfig.getVersion(),
-                pluginConfig.getServers() != null ? pluginConfig.getServers().size() : 0,
-                pluginConfig.getRules() != null ? pluginConfig.getRules().size() : 0);
-
-        return pluginConfig;
+        Files.copy(defaultConfigStream, configPath);
+        logger.debug("Copied default config.yml from resources");
+      }
     }
 
-    /**
-     * Reloads the configuration from file.
-     *
-     * @return The reloaded plugin configuration
-     * @throws IOException if the configuration cannot be reloaded
-     */
-    public PluginConfig reload() throws IOException {
-        if (configDocument != null) {
-            configDocument.reload();
-            pluginConfig = parseConfig();
-        } else {
-            return load();
-        }
-        return pluginConfig;
+    // Minimal default for YamlDocument updater (only version is needed for migration)
+    InputStream defaultForUpdater =
+        new ByteArrayInputStream(
+            ("version: " + CONFIG_VERSION + "\n").getBytes(StandardCharsets.UTF_8));
+
+    configDocument =
+        YamlDocument.create(
+            configPath.toFile(),
+            defaultForUpdater,
+            GeneralSettings.DEFAULT,
+            LoaderSettings.builder().setAutoUpdate(true).build(),
+            DumperSettings.DEFAULT,
+            UpdaterSettings.builder().setVersioning(new BasicVersioning("version")).build());
+
+    logger.debug(configExists ? "Loaded existing config" : "Loaded newly created config");
+
+    // Parse the configuration
+    pluginConfig = parseConfig();
+    logger.info(
+        "Configuration loaded (version: {}, servers: {}, rules: {})",
+        pluginConfig.getVersion(),
+        pluginConfig.getServers() != null ? pluginConfig.getServers().size() : 0,
+        pluginConfig.getRules() != null ? pluginConfig.getRules().size() : 0);
+
+    return pluginConfig;
+  }
+
+  /**
+   * Reloads the configuration from file.
+   *
+   * @return The reloaded plugin configuration
+   * @throws IOException if the configuration cannot be reloaded
+   */
+  public PluginConfig reload() throws IOException {
+    if (configDocument != null) {
+      configDocument.reload();
+      pluginConfig = parseConfig();
+    } else {
+      return load();
+    }
+    return pluginConfig;
+  }
+
+  /** Gets the current plugin configuration. */
+  public PluginConfig getConfig() {
+    return pluginConfig;
+  }
+
+  /** Parses the YAML document into a PluginConfig object. */
+  private PluginConfig parseConfig() {
+    PluginConfig config = new PluginConfig();
+
+    // Parse version
+    config.setVersion(configDocument.getInt("version", 1));
+
+    // Parse settings
+    config.setSettings(parseSettings());
+
+    // Parse defaults
+    config.setDefaults(parseDefaults());
+
+    // Parse servers (with defaults merge)
+    config.setServers(parseServers(config.getDefaults()));
+
+    // Parse rules
+    config.setRules(parseRules());
+
+    return config;
+  }
+
+  /** Parses the settings section. */
+  private SettingsConfig parseSettings() {
+    Section section = configDocument.getSection("settings");
+    return ConfigParser.parseSettings(section);
+  }
+
+  /** Parses the defaults section. */
+  private DefaultsConfig parseDefaults() {
+    DefaultsConfig defaults = new DefaultsConfig();
+
+    Section section = configDocument.getSection("defaults");
+    if (section != null) {
+      Section serverSection = section.getSection("server");
+      if (serverSection != null) {
+        defaults.setServer(ConfigParser.parseServer(serverSection, null));
+      }
     }
 
-    /**
-     * Gets the current plugin configuration.
-     */
-    public PluginConfig getConfig() {
-        return pluginConfig;
+    return defaults;
+  }
+
+  /** Parses the servers section. */
+  private Map<String, ServerConfig> parseServers(DefaultsConfig defaults) {
+    Map<String, ServerConfig> servers = new HashMap<>();
+
+    Section section = configDocument.getSection("servers");
+    if (section == null) {
+      logger.warn("No servers section found in configuration");
+      return servers;
     }
 
-    /**
-     * Parses the YAML document into a PluginConfig object.
-     */
-    private PluginConfig parseConfig() {
-        PluginConfig config = new PluginConfig();
+    Set<?> serverKeys = section.getKeys();
+    logger.debug("Found {} server definitions", serverKeys.size());
 
-        // Parse version
-        config.setVersion(configDocument.getInt("version", 1));
+    for (Object key : serverKeys) {
+      String serverName = key.toString();
+      Section serverSection = section.getSection(serverName);
 
-        // Parse settings
-        config.setSettings(parseSettings());
+      if (serverSection == null) {
+        logger.warn("Server section '{}' is empty or invalid", serverName);
+        continue;
+      }
 
-        // Parse defaults
-        config.setDefaults(parseDefaults());
+      ServerConfig serverConfig = ConfigParser.parseServer(serverSection, serverName);
 
-        // Parse servers (with defaults merge)
-        config.setServers(parseServers(config.getDefaults()));
+      // Merge with defaults
+      ServerConfig defaultServer = defaults != null ? defaults.getServer() : null;
+      serverConfig = configMerger.mergeServerConfig(serverConfig, defaultServer);
+      serverConfig.setName(serverName);
 
-        // Parse rules
-        config.setRules(parseRules());
+      servers.put(serverName, serverConfig);
 
-        return config;
+      String apiType =
+          serverConfig.getControlApi() != null ? serverConfig.getControlApi().getType() : "none";
+      logger.debug("Server '{}' parsed (api_type: {})", serverName, apiType);
     }
 
-    /**
-     * Parses the settings section.
-     */
-    private SettingsConfig parseSettings() {
-        Section section = configDocument.getSection("settings");
-        return ConfigParser.parseSettings(section);
+    return servers;
+  }
+
+  /** Parses the rules section. */
+  private Map<String, RuleConfig> parseRules() {
+    Map<String, RuleConfig> rules = new HashMap<>();
+
+    Section section = configDocument.getSection("rules");
+    if (section == null) {
+      logger.warn("No rules section found in configuration");
+      return rules;
     }
 
-    /**
-     * Parses the defaults section.
-     */
-    private DefaultsConfig parseDefaults() {
-        DefaultsConfig defaults = new DefaultsConfig();
+    Set<?> ruleKeys = section.getKeys();
+    logger.debug("Found {} rule definitions", ruleKeys.size());
 
-        Section section = configDocument.getSection("defaults");
-        if (section != null) {
-            Section serverSection = section.getSection("server");
-            if (serverSection != null) {
-                defaults.setServer(ConfigParser.parseServer(serverSection, null));
-            }
-        }
+    for (Object key : ruleKeys) {
+      String ruleName = key.toString();
+      Section ruleSection = section.getSection(ruleName);
 
-        return defaults;
+      if (ruleSection == null) {
+        logger.warn("Rule section '{}' is empty or invalid", ruleName);
+        continue;
+      }
+
+      RuleConfig ruleConfig = ConfigParser.parseRule(ruleSection, ruleName);
+      rules.put(ruleName, ruleConfig);
+
+      int triggerCount = ruleConfig.getTriggers() != null ? ruleConfig.getTriggers().size() : 0;
+      int actionCount = ruleConfig.getActions() != null ? ruleConfig.getActions().size() : 0;
+      boolean hasConditions =
+          ruleConfig.getConditions() != null && !ruleConfig.getConditions().isEmpty();
+
+      logger.debug(
+          "Rule '{}' parsed: {} triggers, {} actions, conditions: {}",
+          ruleName,
+          triggerCount,
+          actionCount,
+          hasConditions);
     }
 
-    /**
-     * Parses the servers section.
-     */
-    private Map<String, ServerConfig> parseServers(DefaultsConfig defaults) {
-        Map<String, ServerConfig> servers = new HashMap<>();
-
-        Section section = configDocument.getSection("servers");
-        if (section == null) {
-            logger.warn("No servers section found in configuration");
-            return servers;
-        }
-
-        Set<?> serverKeys = section.getKeys();
-        logger.debug("Found {} server definitions", serverKeys.size());
-        
-        for (Object key : serverKeys) {
-            String serverName = key.toString();
-            Section serverSection = section.getSection(serverName);
-            
-            if (serverSection == null) {
-                logger.warn("Server section '{}' is empty or invalid", serverName);
-                continue;
-            }
-
-            ServerConfig serverConfig = ConfigParser.parseServer(serverSection, serverName);
-
-            // Merge with defaults
-            ServerConfig defaultServer = defaults != null ? defaults.getServer() : null;
-            serverConfig = configMerger.mergeServerConfig(serverConfig, defaultServer);
-            serverConfig.setName(serverName);
-
-            servers.put(serverName, serverConfig);
-            
-            String apiType = serverConfig.getControlApi() != null 
-                    ? serverConfig.getControlApi().getType() 
-                    : "none";
-            logger.debug("Server '{}' parsed (api_type: {})", serverName, apiType);
-        }
-
-        return servers;
-    }
-
-    /**
-     * Parses the rules section.
-     */
-    private Map<String, RuleConfig> parseRules() {
-        Map<String, RuleConfig> rules = new HashMap<>();
-
-        Section section = configDocument.getSection("rules");
-        if (section == null) {
-            logger.warn("No rules section found in configuration");
-            return rules;
-        }
-
-        Set<?> ruleKeys = section.getKeys();
-        logger.debug("Found {} rule definitions", ruleKeys.size());
-        
-        for (Object key : ruleKeys) {
-            String ruleName = key.toString();
-            Section ruleSection = section.getSection(ruleName);
-            
-            if (ruleSection == null) {
-                logger.warn("Rule section '{}' is empty or invalid", ruleName);
-                continue;
-            }
-
-            RuleConfig ruleConfig = ConfigParser.parseRule(ruleSection, ruleName);
-            rules.put(ruleName, ruleConfig);
-
-            int triggerCount = ruleConfig.getTriggers() != null ? ruleConfig.getTriggers().size() : 0;
-            int actionCount = ruleConfig.getActions() != null ? ruleConfig.getActions().size() : 0;
-            boolean hasConditions = ruleConfig.getConditions() != null && !ruleConfig.getConditions().isEmpty();
-            
-            logger.debug("Rule '{}' parsed: {} triggers, {} actions, conditions: {}", 
-                    ruleName, triggerCount, actionCount, hasConditions);
-        }
-
-        return rules;
-    }
+    return rules;
+  }
 }
