@@ -1,6 +1,5 @@
 package com.autostartstop.condition.impl;
 
-import com.autostartstop.Log;
 import com.autostartstop.condition.Condition;
 import com.autostartstop.condition.ConditionContext;
 import com.autostartstop.condition.ConditionType;
@@ -9,10 +8,11 @@ import com.autostartstop.context.ExecutionContext;
 import com.autostartstop.context.VariableResolver;
 import java.util.Map;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** Compares a numeric value against min, max, or equals constraints. */
 public class NumberCompareCondition implements Condition {
-  private static final Logger logger = Log.get(NumberCompareCondition.class);
+  private static final Logger logger = LoggerFactory.getLogger(NumberCompareCondition.class);
 
   private final String value;
   private final String min;

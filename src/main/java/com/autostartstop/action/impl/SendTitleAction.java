@@ -1,6 +1,5 @@
 package com.autostartstop.action.impl;
 
-import com.autostartstop.Log;
 import com.autostartstop.action.AbstractPlayerTargetingAction;
 import com.autostartstop.action.ActionContext;
 import com.autostartstop.action.ActionType;
@@ -15,10 +14,11 @@ import java.util.Set;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** Sends a title and optional subtitle to targeted players. */
 public class SendTitleAction extends AbstractPlayerTargetingAction {
-  private static final Logger logger = Log.get(SendTitleAction.class);
+  private static final Logger logger = LoggerFactory.getLogger(SendTitleAction.class);
 
   private static final Duration DEFAULT_FADE_IN = Duration.ofMillis(500);
   private static final Duration DEFAULT_STAY = Duration.ofSeconds(3);

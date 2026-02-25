@@ -1,6 +1,5 @@
 package com.autostartstop.condition.impl;
 
-import com.autostartstop.Log;
 import com.autostartstop.condition.Condition;
 import com.autostartstop.condition.ConditionContext;
 import com.autostartstop.condition.ConditionType;
@@ -10,10 +9,11 @@ import com.autostartstop.context.VariableResolver;
 import com.autostartstop.server.ServerManager;
 import java.util.Map;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** Condition that checks a server's online/offline status. */
 public class ServerStatusCondition implements Condition {
-  private static final Logger logger = Log.get(ServerStatusCondition.class);
+  private static final Logger logger = LoggerFactory.getLogger(ServerStatusCondition.class);
 
   private final String server;
   private final String expectedStatus;

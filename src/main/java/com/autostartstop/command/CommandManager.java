@@ -1,6 +1,5 @@
 package com.autostartstop.command;
 
-import com.autostartstop.Log;
 import com.autostartstop.util.MiniMessageUtil;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.SimpleCommand;
@@ -9,10 +8,11 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** Manages the main plugin command and its subcommands. */
 public class CommandManager implements SimpleCommand {
-  private static final Logger logger = Log.get(CommandManager.class);
+  private static final Logger logger = LoggerFactory.getLogger(CommandManager.class);
   private static final String MAIN_COMMAND = "autostartstop";
   private static final String ALIAS = "ass";
   private static final String BASE_PERMISSION = "autostartstop.command";

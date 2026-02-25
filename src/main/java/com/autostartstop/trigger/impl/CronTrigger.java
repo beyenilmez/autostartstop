@@ -1,6 +1,5 @@
 package com.autostartstop.trigger.impl;
 
-import com.autostartstop.Log;
 import com.autostartstop.config.ConfigException;
 import com.autostartstop.config.TriggerConfig;
 import com.autostartstop.context.ExecutionContext;
@@ -24,6 +23,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Trigger that fires on a schedule defined by a cron expression. Supports multiple cron formats:
@@ -38,7 +38,7 @@ import org.slf4j.Logger;
  * time (ISO-8601) - ${cron.actual_time} - The actual execution time (ISO-8601)
  */
 public class CronTrigger implements Trigger {
-  private static final Logger logger = Log.get(CronTrigger.class);
+  private static final Logger logger = LoggerFactory.getLogger(CronTrigger.class);
 
   private final ProxyServer proxy;
   private final Object plugin;

@@ -1,6 +1,5 @@
 package com.autostartstop.action.impl;
 
-import com.autostartstop.Log;
 import com.autostartstop.action.AbstractPlayerTargetingAction;
 import com.autostartstop.action.ActionContext;
 import com.autostartstop.action.ActionType;
@@ -17,13 +16,14 @@ import java.util.concurrent.ConcurrentHashMap;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Shows a bossbar to targeted players. The bossbar is tracked by ID and can be hidden later with
  * HideBossbarAction.
  */
 public class ShowBossbarAction extends AbstractPlayerTargetingAction {
-  private static final Logger logger = Log.get(ShowBossbarAction.class);
+  private static final Logger logger = LoggerFactory.getLogger(ShowBossbarAction.class);
 
   /** Active bossbars keyed by ID, then by player UUID. */
   private static final Map<String, Map<UUID, BossBar>> activeBossbars = new ConcurrentHashMap<>();

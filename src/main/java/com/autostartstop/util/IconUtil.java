@@ -1,6 +1,5 @@
 package com.autostartstop.util;
 
-import com.autostartstop.Log;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -8,6 +7,7 @@ import java.nio.file.Path;
 import java.util.Base64;
 import javax.imageio.ImageIO;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Utility class for handling server icons (favicons). Supports loading icons from file paths or
@@ -16,7 +16,7 @@ import org.slf4j.Logger;
  * <p>Icons must be PNG format and exactly 64x64 pixels to be valid for Minecraft server list.
  */
 public final class IconUtil {
-  private static final Logger logger = Log.get(IconUtil.class);
+  private static final Logger logger = LoggerFactory.getLogger(IconUtil.class);
   private static final int REQUIRED_WIDTH = 64;
   private static final int REQUIRED_HEIGHT = 64;
   private static final String DATA_URI_PREFIX = "data:image/png;base64,";

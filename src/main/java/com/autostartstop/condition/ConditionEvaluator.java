@@ -1,18 +1,18 @@
 package com.autostartstop.condition;
 
-import com.autostartstop.Log;
 import com.autostartstop.config.ConditionConfig;
 import com.autostartstop.context.ExecutionContext;
 import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Evaluates conditions against an execution context. Supports AND (all) and OR (any) modes for
  * combining multiple conditions.
  */
 public class ConditionEvaluator {
-  private static final Logger logger = Log.get(ConditionEvaluator.class);
+  private static final Logger logger = LoggerFactory.getLogger(ConditionEvaluator.class);
 
   private final ConditionRegistry conditionRegistry;
 

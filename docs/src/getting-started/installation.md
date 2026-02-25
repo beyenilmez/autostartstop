@@ -39,7 +39,7 @@ velocity/
 You can verify the installation by checking the console for the following message:
 
 ```{ .text .no-copy }
-[AutoStartStop]: AutoStartStop enabled successfully
+AutoStartStop enabled successfully
 ```
 
 !!! tip "No success message?"

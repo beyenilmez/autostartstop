@@ -1,6 +1,5 @@
 package com.autostartstop.action.impl;
 
-import com.autostartstop.Log;
 import com.autostartstop.action.Action;
 import com.autostartstop.action.ActionContext;
 import com.autostartstop.action.ActionType;
@@ -20,6 +19,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import net.kyori.adventure.text.Component;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Action that responds to a ping request with custom ping data. This action modifies the
@@ -34,7 +34,7 @@ import org.slf4j.Logger;
  * 64x64 PNG)
  */
 public class RespondPingAction implements Action {
-  private static final Logger logger = Log.get(RespondPingAction.class);
+  private static final Logger logger = LoggerFactory.getLogger(RespondPingAction.class);
   private static final String ACTION_NAME = "respond_ping";
 
   private final String pingParam;

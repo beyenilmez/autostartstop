@@ -1,6 +1,5 @@
 package com.autostartstop.action.impl;
 
-import com.autostartstop.Log;
 import com.autostartstop.action.Action;
 import com.autostartstop.action.ActionContext;
 import com.autostartstop.action.ActionType;
@@ -11,13 +10,14 @@ import com.velocitypowered.api.event.ResultedEvent;
 import com.velocitypowered.api.event.proxy.ProxyPingEvent;
 import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Action that allows a ping request to proceed normally. This action allows the ping response to be
  * sent if it was previously held.
  */
 public class AllowPingAction implements Action {
-  private static final Logger logger = Log.get(AllowPingAction.class);
+  private static final Logger logger = LoggerFactory.getLogger(AllowPingAction.class);
   private static final String ACTION_NAME = "allow_ping";
 
   private final String pingEventParam;

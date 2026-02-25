@@ -1,6 +1,5 @@
 package com.autostartstop.action.impl;
 
-import com.autostartstop.Log;
 import com.autostartstop.action.Action;
 import com.autostartstop.action.ActionContext;
 import com.autostartstop.action.ActionType;
@@ -11,13 +10,14 @@ import com.autostartstop.server.ServerManager;
 import com.autostartstop.server.ServerStartupTracker;
 import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Action that starts a server. Calls beginStartup() on the tracker which handles all monitoring
  * automatically.
  */
 public class StartAction implements Action {
-  private static final Logger logger = Log.get(StartAction.class);
+  private static final Logger logger = LoggerFactory.getLogger(StartAction.class);
 
   private final String server;
   private final ServerManager serverManager;

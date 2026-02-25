@@ -1,9 +1,9 @@
 package com.autostartstop.action;
 
-import com.autostartstop.Log;
 import com.autostartstop.config.ActionConfig;
 import com.autostartstop.config.ConfigException;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Registry for action creators. Manages the creation of actions using static create methods defined
@@ -11,7 +11,7 @@ import org.slf4j.Logger;
  */
 public class ActionRegistry {
 
-  private static final Logger logger = Log.get(ActionRegistry.class);
+  private static final Logger logger = LoggerFactory.getLogger(ActionRegistry.class);
   private ActionContext actionContext;
 
   public ActionRegistry() {}

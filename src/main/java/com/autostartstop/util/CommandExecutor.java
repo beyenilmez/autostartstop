@@ -1,6 +1,5 @@
 package com.autostartstop.util;
 
-import com.autostartstop.Log;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
@@ -12,6 +11,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Utility class for executing shell commands with proper timeout handling, environment variable
@@ -21,7 +21,7 @@ import org.slf4j.Logger;
  * ExecAction, etc.)
  */
 public class CommandExecutor {
-  private static final Logger logger = Log.get(CommandExecutor.class);
+  private static final Logger logger = LoggerFactory.getLogger(CommandExecutor.class);
 
   /** Default command timeout (60 seconds). */
   public static final Duration DEFAULT_COMMAND_TIMEOUT = Duration.ofSeconds(60);

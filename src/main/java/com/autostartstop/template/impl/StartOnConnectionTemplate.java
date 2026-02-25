@@ -1,6 +1,5 @@
 package com.autostartstop.template.impl;
 
-import com.autostartstop.Log;
 import com.autostartstop.action.impl.StartAction;
 import com.autostartstop.config.ConfigAccessor;
 import com.autostartstop.config.TemplateConfig;
@@ -28,6 +27,7 @@ import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Template that starts servers when players attempt to connect to them.
@@ -79,7 +79,7 @@ import org.slf4j.Logger;
  * </pre>
  */
 public class StartOnConnectionTemplate implements Template {
-  private static final Logger logger = Log.get(StartOnConnectionTemplate.class);
+  private static final Logger logger = LoggerFactory.getLogger(StartOnConnectionTemplate.class);
 
   private static final long POLL_INTERVAL_MS = 500;
   private static final long MAX_WAIT_MS = 15 * 60 * 1000; // 15 minutes max wait

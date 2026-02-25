@@ -1,6 +1,5 @@
 package com.autostartstop.api.impl;
 
-import com.autostartstop.Log;
 import com.autostartstop.api.ServerControlApi;
 import com.autostartstop.config.ControlApiConfig;
 import com.autostartstop.util.CommandExecutor;
@@ -9,10 +8,11 @@ import java.time.Duration;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** Server control API implementation using shell commands. */
 public class ShellServerControlApi implements ServerControlApi {
-  private static final Logger logger = Log.get(ShellServerControlApi.class);
+  private static final Logger logger = LoggerFactory.getLogger(ShellServerControlApi.class);
   private static final String TYPE = "shell";
 
   private final String serverName;

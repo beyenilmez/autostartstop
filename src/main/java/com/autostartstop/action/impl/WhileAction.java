@@ -1,6 +1,5 @@
 package com.autostartstop.action.impl;
 
-import com.autostartstop.Log;
 import com.autostartstop.action.Action;
 import com.autostartstop.action.ActionContext;
 import com.autostartstop.action.ActionRegistry;
@@ -19,13 +18,14 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Executes nested actions repeatedly while conditions are met. Supports timeout and configurable
  * update interval.
  */
 public class WhileAction implements Action {
-  private static final Logger logger = Log.get(WhileAction.class);
+  private static final Logger logger = LoggerFactory.getLogger(WhileAction.class);
   private static final String ACTION_NAME = "while";
   private static final Duration DEFAULT_UPDATE_INTERVAL = Duration.ofSeconds(1);
 

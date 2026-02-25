@@ -1,6 +1,5 @@
 package com.autostartstop.action.impl;
 
-import com.autostartstop.Log;
 import com.autostartstop.action.AbstractPlayerTargetingAction;
 import com.autostartstop.action.ActionContext;
 import com.autostartstop.action.ActionType;
@@ -13,10 +12,11 @@ import java.util.List;
 import java.util.Set;
 import net.kyori.adventure.text.Component;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** Action that sends an action bar message to one or more players. */
 public class SendActionBarAction extends AbstractPlayerTargetingAction {
-  private static final Logger logger = Log.get(SendActionBarAction.class);
+  private static final Logger logger = LoggerFactory.getLogger(SendActionBarAction.class);
 
   private final String message;
 

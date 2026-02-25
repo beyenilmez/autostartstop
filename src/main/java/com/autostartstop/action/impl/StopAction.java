@@ -1,6 +1,5 @@
 package com.autostartstop.action.impl;
 
-import com.autostartstop.Log;
 import com.autostartstop.action.Action;
 import com.autostartstop.action.ActionContext;
 import com.autostartstop.action.ActionType;
@@ -11,10 +10,11 @@ import com.autostartstop.server.MotdCacheManager;
 import com.autostartstop.server.ServerManager;
 import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** Action that stops a server. */
 public class StopAction implements Action {
-  private static final Logger logger = Log.get(StopAction.class);
+  private static final Logger logger = LoggerFactory.getLogger(StopAction.class);
 
   private final String server;
   private final ServerManager serverManager;

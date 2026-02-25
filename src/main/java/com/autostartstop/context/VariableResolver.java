@@ -1,6 +1,5 @@
 package com.autostartstop.context;
 
-import com.autostartstop.Log;
 import com.autostartstop.server.ManagedServer;
 import com.autostartstop.server.ServerManager;
 import com.autostartstop.server.ServerStartupTracker;
@@ -9,6 +8,7 @@ import com.autostartstop.util.DurationUtil;
 import java.time.Duration;
 import java.util.List;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Resolves ${...} variable placeholders and provides type-safe parsing.
@@ -22,7 +22,7 @@ import org.slf4j.Logger;
  * </ul>
  */
 public class VariableResolver {
-  private static final Logger logger = Log.get(VariableResolver.class);
+  private static final Logger logger = LoggerFactory.getLogger(VariableResolver.class);
 
   private ServerManager serverManager;
   private ServerStartupTracker serverStartupTracker;

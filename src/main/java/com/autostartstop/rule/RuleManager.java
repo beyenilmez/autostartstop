@@ -1,6 +1,5 @@
 package com.autostartstop.rule;
 
-import com.autostartstop.Log;
 import com.autostartstop.config.PluginConfig;
 import com.autostartstop.config.RuleConfig;
 import com.autostartstop.config.TemplateConfig;
@@ -17,13 +16,14 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Manages all rules in the plugin. Handles rule lifecycle including trigger activation/deactivation
  * and template activation.
  */
 public class RuleManager {
-  private static final Logger logger = Log.get(RuleManager.class);
+  private static final Logger logger = LoggerFactory.getLogger(RuleManager.class);
 
   private final Map<String, Rule> rules = new ConcurrentHashMap<>();
   private final Map<String, List<ManualTrigger>> manualTriggersById = new ConcurrentHashMap<>();
