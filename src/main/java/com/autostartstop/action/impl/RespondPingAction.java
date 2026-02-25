@@ -161,12 +161,11 @@ public class RespondPingAction implements Action {
     if (useCachedMotd != null && useCachedMotd && motdCacheManager != null) {
       String virtualHost = (String) context.getVariable("ping.player.virtual_host", null);
       logger.debug(
-          "({}) {}: Looking for cached MOTD, useCachedMotd={}, virtualHost='{}', motdCacheManager={}",
+          "({}) {}: Looking for cached MOTD, useCachedMotd={}, virtualHost='{}', motdCacheManager=present",
           ruleName,
           ACTION_NAME,
           useCachedMotd,
-          virtualHost,
-          motdCacheManager != null);
+          virtualHost);
       String cachedMotd = motdCacheManager.getCachedMotd(virtualHost);
       if (cachedMotd != null && !cachedMotd.isEmpty()) {
         motdComponent = MiniMessageUtil.parse(cachedMotd);
