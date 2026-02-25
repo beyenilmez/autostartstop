@@ -121,7 +121,7 @@ public class TriggerCommand implements SubCommand {
   }
 
   @Override
-  public List<String> suggest(CommandSource source, String[] args) {
+  public List<String> suggest(String[] args) {
     if (args.length == 1) {
       String prefix = args[0].toLowerCase();
       return ruleManager.getManualTriggerIds().stream()

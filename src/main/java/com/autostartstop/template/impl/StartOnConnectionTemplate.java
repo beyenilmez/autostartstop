@@ -287,7 +287,7 @@ public class StartOnConnectionTemplate implements Template {
           targetServerName);
       // We need to allow the connection since it was denied (if not NONE mode)
       if (mode != ConnectionMode.NONE) {
-        allowConnection(player, targetServerName, ctx);
+        allowConnection(targetServerName, ctx);
       }
       return CompletableFuture.completedFuture(null);
     }
@@ -298,7 +298,7 @@ public class StartOnConnectionTemplate implements Template {
         targetServerName);
 
     return switch (mode) {
-      case NONE -> handleModeNone(player, targetServerName, ctx);
+      case NONE -> handleModeNone(targetServerName, ctx);
       case DISCONNECT -> handleModeDisconnect(player, targetServerName, ctx);
       case HOLD -> handleModeHold(player, targetServerName, ctx);
       case WAITING_SERVER -> handleModeWaitingServer(player, targetServerName, ctx);
@@ -306,8 +306,7 @@ public class StartOnConnectionTemplate implements Template {
   }
 
   /** Mode NONE: Just start the server, don't interfere with connection. */
-  private CompletableFuture<Void> handleModeNone(
-      Player player, String targetServerName, ExecutionContext ctx) {
+  private CompletableFuture<Void> handleModeNone(String targetServerName, ExecutionContext ctx) {
     logger.debug(
         "StartOnConnectionTemplate: mode NONE - starting server '{}' without connection handling",
         targetServerName);
@@ -351,7 +350,7 @@ public class StartOnConnectionTemplate implements Template {
                 logger.debug(
                     "StartOnConnectionTemplate: server '{}' is now online, allowing connection",
                     targetServerName);
-                allowConnection(player, targetServerName, ctx);
+                allowConnection(targetServerName, ctx);
               } else {
                 logger.warn(
                     "StartOnConnectionTemplate: timeout waiting for server '{}' in HOLD mode",
@@ -401,10 +400,10 @@ public class StartOnConnectionTemplate implements Template {
                         startServer(targetServerName, ctx);
 
                         // Step 4: Send initial message if configured
-                        sendInitialMessage(player, targetServerName, ctx);
+                        sendInitialMessage(player, ctx);
 
                         // Step 5: Show initial title if configured
-                        updateTitle(player, targetServerName, ctx);
+                        updateTitle(player, ctx);
 
                         // Step 6: Wait for target server while updating UI
                         return waitForServerWithUI(player, targetServerName, ctx)
@@ -541,9 +540,9 @@ public class StartOnConnectionTemplate implements Template {
             }
 
             // Update UI elements
-            updateTitle(player, targetServerName, ctx);
-            updateBossbar(player, targetServerName, ctx);
-            updateActionBar(player, targetServerName, ctx);
+            updateTitle(player, ctx);
+            updateBossbar(player, ctx);
+            updateActionBar(player, ctx);
 
             // Calculate how long the iteration took
             long currentTime = System.currentTimeMillis();
@@ -567,7 +566,7 @@ public class StartOnConnectionTemplate implements Template {
   }
 
   /** Sends the initial message when player enters waiting server. */
-  private void sendInitialMessage(Player player, String targetServerName, ExecutionContext ctx) {
+  private void sendInitialMessage(Player player, ExecutionContext ctx) {
     if (waitingServerConfig == null || !waitingServerConfig.isMessageEnabled()) {
       return;
     }
@@ -586,7 +585,7 @@ public class StartOnConnectionTemplate implements Template {
    * Updates the title with current variable values. Uses configured fade-in for initial display,
    * zero fade-in for updates.
    */
-  private void updateTitle(Player player, String targetServerName, ExecutionContext ctx) {
+  private void updateTitle(Player player, ExecutionContext ctx) {
     if (waitingServerConfig == null || !waitingServerConfig.isTitleEnabled()) {
       return;
     }
@@ -622,7 +621,7 @@ public class StartOnConnectionTemplate implements Template {
   }
 
   /** Updates the bossbar progress. */
-  private void updateBossbar(Player player, String targetServerName, ExecutionContext ctx) {
+  private void updateBossbar(Player player, ExecutionContext ctx) {
     if (waitingServerConfig == null || !waitingServerConfig.isProgressBarEnabled()) {
       return;
     }
@@ -656,7 +655,7 @@ public class StartOnConnectionTemplate implements Template {
   }
 
   /** Updates the action bar message. */
-  private void updateActionBar(Player player, String targetServerName, ExecutionContext ctx) {
+  private void updateActionBar(Player player, ExecutionContext ctx) {
     if (waitingServerConfig == null || !waitingServerConfig.isActionBarEnabled()) {
       return;
     }
@@ -791,7 +790,7 @@ public class StartOnConnectionTemplate implements Template {
    * Allows a connection that was previously denied. This modifies the original
    * ServerPreConnectEvent to allow the connection.
    */
-  private void allowConnection(Player player, String serverName, ExecutionContext ctx) {
+  private void allowConnection(String serverName, ExecutionContext ctx) {
     RegisteredServer server = context.serverManager().getRegisteredServer(serverName);
     if (server == null) {
       logger.error(

@@ -120,7 +120,7 @@ public class CommandManager implements SimpleCommand {
 
     if (subCommand != null && source.hasPermission(subCommand.getPermission())) {
       String[] subArgs = Arrays.copyOfRange(args, 1, args.length);
-      return CompletableFuture.completedFuture(subCommand.suggest(source, subArgs));
+      return CompletableFuture.completedFuture(subCommand.suggest(subArgs));
     }
 
     return CompletableFuture.completedFuture(Collections.emptyList());

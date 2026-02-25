@@ -70,7 +70,7 @@ public class ReloadCommand implements SubCommand {
   }
 
   @Override
-  public List<String> suggest(CommandSource source, String[] args) {
+  public List<String> suggest(String[] args) {
     return Collections.emptyList();
   }
 }

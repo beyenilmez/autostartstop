@@ -45,9 +45,8 @@ public interface SubCommand {
   /**
    * Provides tab completion suggestions.
    *
-   * @param source The command source
    * @param args The current arguments
    * @return List of suggestions
    */
-  List<String> suggest(CommandSource source, String[] args);
+  List<String> suggest(String[] args);
 }
