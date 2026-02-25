@@ -8,9 +8,6 @@ on:
       - '!docs/**'
       - '!*.md'
       - '!LICENSE'
-      - '!.github/**'
-      - '.github/workflows/ci.yml'
-      - '.github/workflows/codeql.yml'
   pull_request:
     branches: [main]
     paths:
@@ -18,9 +15,6 @@ on:
       - '!docs/**'
       - '!*.md'
       - '!LICENSE'
-      - '!.github/**'
-      - '.github/workflows/ci.yml'
-      - '.github/workflows/codeql.yml'
   workflow_dispatch:
     inputs:
       release:

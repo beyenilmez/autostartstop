@@ -1,4 +1,4 @@
-name: "CodeQL Advanced"
+name: "CodeQL Java"
 
 on:
   push:
@@ -8,9 +8,6 @@ on:
       - '!docs/**'
       - '!*.md'
       - '!LICENSE'
-      - '!.github/**'
-      - '.github/workflows/ci.yml'
-      - '.github/workflows/codeql.yml'
   pull_request:
     branches: [ "main" ]
     paths:
@@ -18,66 +15,44 @@ on:
       - '!docs/**'
       - '!*.md'
       - '!LICENSE'
-      - '!.github/**'
-      - '.github/workflows/ci.yml'
-      - '.github/workflows/codeql.yml'
   schedule:
     - cron: '0 0 * * 0'
   workflow_dispatch:
-  
+
 jobs:
   analyze:
-    name: Analyze (${{ matrix.language }})
+    name: Analyze Java
     runs-on: 'ubuntu-latest'
     permissions:
-      # required for all workflows
       security-events: write
-
-      # required to fetch internal or private CodeQL packs
       packages: read
-
-      # only required for workflows in private repositories
       actions: read
       contents: read
 
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-        - language: actions
-          build-mode: none
-        - language: java-kotlin
-          build-mode: manual
-
     steps:
     - name: Checkout repository
-      uses:  actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-    
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
     - name: Set up Java
-      if: matrix.language == 'java-kotlin'
       uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5
       with:
         java-version: '21'
         distribution: 'temurin'
-        cache: 'gradle'
 
     - name: Setup Gradle
-      if: matrix.language == 'java-kotlin'
       uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5
 
-    # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
       uses: github/codeql-action/init@89a39a4e59826350b863aa6b6252a07ad50cf83e # v4
       with:
-        languages: ${{ matrix.language }}
-        build-mode: ${{ matrix.build-mode }}
+        languages: java-kotlin
+        build-mode: manual
         queries: security-and-quality
 
     - name: Build with Gradle
-      if: matrix.language == 'java-kotlin'
-      run: ./gradlew build -x test
+      run: ./gradlew clean build -x test
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@89a39a4e59826350b863aa6b6252a07ad50cf83e # v4
       with:
-        category: "/language:${{matrix.language}}"
+        category: "/language:java-kotlin"
