@@ -132,9 +132,9 @@ class VariableResolverTest {
     @Test
     @DisplayName("should parse int from string and resolve variables")
     void shouldParseAndResolve() {
-      assertEquals(42, resolver.resolveInt("42", context, 0));
+      assertEquals(42, resolver.resolveIntFromString("42", context, 0));
       context.setVariable("n", "10");
-      assertEquals(10, resolver.resolveInt("${n}", context, 0));
+      assertEquals(10, resolver.resolveIntFromString("${n}", context, 0));
     }
 
     @Test
@@ -154,7 +154,7 @@ class VariableResolverTest {
     @Test
     @DisplayName("should parse double from string")
     void shouldParse() {
-      assertEquals(3.14, resolver.resolveDouble("3.14", context, 0.0), 0.001);
+      assertEquals(3.14, resolver.resolveDoubleFromString("3.14", context, 0.0), 0.001);
     }
 
     @Test
@@ -171,9 +171,9 @@ class VariableResolverTest {
     @Test
     @DisplayName("should clamp to [min, max]")
     void shouldClamp() {
-      assertEquals(0.0f, resolver.resolveFloatClamped("-1.0", context, 0.5f, 0.0f, 1.0f), 0.001);
-      assertEquals(1.0f, resolver.resolveFloatClamped("5.0", context, 0.5f, 0.0f, 1.0f), 0.001);
-      assertEquals(0.5f, resolver.resolveFloatClamped("0.5", context, 0.0f, 0.0f, 1.0f), 0.001);
+      assertEquals(0.0f, resolver.resolveFloatClampedFromString("-1.0", context, 0.5f, 0.0f, 1.0f), 0.001);
+      assertEquals(1.0f, resolver.resolveFloatClampedFromString("5.0", context, 0.5f, 0.0f, 1.0f), 0.001);
+      assertEquals(0.5f, resolver.resolveFloatClampedFromString("0.5", context, 0.0f, 0.0f, 1.0f), 0.001);
     }
   }
 
@@ -185,20 +185,20 @@ class VariableResolverTest {
     @ValueSource(strings = {"true", "yes", "1", "on", "TRUE", "Yes", "ON"})
     @DisplayName("should resolve truthy values")
     void shouldResolveTruthy(String input) {
-      assertTrue(resolver.resolveBoolean(input, context, false));
+      assertTrue(resolver.resolveBooleanFromString(input, context, false));
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"false", "no", "0", "off", "FALSE", "No", "OFF"})
     @DisplayName("should resolve falsy values")
     void shouldResolveFalsy(String input) {
-      assertFalse(resolver.resolveBoolean(input, context, true));
+      assertFalse(resolver.resolveBooleanFromString(input, context, true));
     }
 
     @Test
     @DisplayName("should return default for unrecognized or null input")
     void shouldReturnDefault() {
-      assertTrue(resolver.resolveBoolean("maybe", context, true));
+      assertTrue(resolver.resolveBooleanFromString("maybe", context, true));
       assertTrue(resolver.resolveBoolean((Object) null, context, true));
     }
 
@@ -213,7 +213,7 @@ class VariableResolverTest {
     @DisplayName("should resolve variable then parse boolean")
     void shouldResolveVariable() {
       context.setVariable("flag", "yes");
-      assertTrue(resolver.resolveBoolean("${flag}", context, false));
+      assertTrue(resolver.resolveBooleanFromString("${flag}", context, false));
     }
   }
 

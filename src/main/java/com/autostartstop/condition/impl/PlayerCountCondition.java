@@ -64,7 +64,7 @@ public class PlayerCountCondition implements Condition {
     logger.debug("Server '{}' has {} players", resolvedServer, playerCount);
 
     if (equals != null && !equals.isBlank()) {
-      int resolvedEquals = variableResolver.resolveInt(equals, context, Integer.MIN_VALUE);
+      int resolvedEquals = variableResolver.resolveIntFromString(equals, context, Integer.MIN_VALUE);
       if (resolvedEquals != Integer.MIN_VALUE) {
         boolean result = playerCount == resolvedEquals;
         logger.debug("{} == {} -> {}", playerCount, resolvedEquals, result);
@@ -73,7 +73,7 @@ public class PlayerCountCondition implements Condition {
     }
 
     if (min != null && !min.isBlank()) {
-      int resolvedMin = variableResolver.resolveInt(min, context, Integer.MIN_VALUE);
+      int resolvedMin = variableResolver.resolveIntFromString(min, context, Integer.MIN_VALUE);
       if (resolvedMin != Integer.MIN_VALUE && playerCount < resolvedMin) {
         logger.debug("{} < min({}) -> false", playerCount, resolvedMin);
         return false;
@@ -81,7 +81,7 @@ public class PlayerCountCondition implements Condition {
     }
 
     if (max != null && !max.isBlank()) {
-      int resolvedMax = variableResolver.resolveInt(max, context, Integer.MAX_VALUE);
+      int resolvedMax = variableResolver.resolveIntFromString(max, context, Integer.MAX_VALUE);
       if (resolvedMax != Integer.MAX_VALUE && playerCount > resolvedMax) {
         logger.debug("{} > max({}) -> false", playerCount, resolvedMax);
         return false;

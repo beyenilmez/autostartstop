@@ -634,7 +634,7 @@ public class StartOnConnectionTemplate implements Template {
     Component messageComponent = MiniMessageUtil.parse(resolvedMessage);
 
     String progressRaw = waitingServerConfig.getProgressBarProgress();
-    float progress = resolver.resolveFloatClamped(progressRaw, ctx, 0.0f, 0.0f, 1.0f);
+    float progress = resolver.resolveFloatClampedFromString(progressRaw, ctx, 0.0f, 0.0f, 1.0f);
 
     BossBar.Color color = waitingServerConfig.getProgressBarColor();
     BossBar.Overlay overlay = waitingServerConfig.getProgressBarOverlay();

@@ -92,7 +92,7 @@ public class ShowBossbarAction extends AbstractPlayerTargetingAction {
         resolver.resolveEnum(colorRaw, context, BossBar.Color.class, BossBar.Color.WHITE);
     BossBar.Overlay overlay =
         resolver.resolveEnum(overlayRaw, context, BossBar.Overlay.class, BossBar.Overlay.PROGRESS);
-    float progress = resolver.resolveFloatClamped(progressRaw, context, 1.0f, 0.0f, 1.0f);
+    float progress = resolver.resolveFloatClampedFromString(progressRaw, context, 1.0f, 0.0f, 1.0f);
 
     Map<UUID, BossBar> playerBossbars =
         activeBossbars.computeIfAbsent(resolvedId, k -> new ConcurrentHashMap<>());
