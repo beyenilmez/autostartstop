@@ -1,0 +1,55 @@
+name: "CodeQL Java"
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - '**'
+      - '!docs/**'
+      - '!*.md'
+      - '!LICENSE'
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - '**'
+      - '!docs/**'
+      - '!*.md'
+      - '!LICENSE'
+  schedule:
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+
+jobs:
+  analyze:
+    name: Analyze Java
+    runs-on: 'ubuntu-latest'
+    permissions:
+      security-events: write
+      packages: read
+      actions: read
+      contents: read
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+    - name: Set up Java
+      uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@89a39a4e59826350b863aa6b6252a07ad50cf83e # v4
+      with:
+        languages: java-kotlin
+        build-mode: manual
+        queries: security-and-quality
+
+    - name: Build with Gradle
+      run: ./gradlew build -x test
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@89a39a4e59826350b863aa6b6252a07ad50cf83e # v4
+      with:
+        category: "/language:java-kotlin"

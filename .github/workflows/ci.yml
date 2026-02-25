@@ -8,8 +8,6 @@ on:
       - '!docs/**'
       - '!*.md'
       - '!LICENSE'
-      - '!.github/**'
-      - '.github/workflows/ci.yml'
   pull_request:
     branches: [main]
     paths:
@@ -17,8 +15,6 @@ on:
       - '!docs/**'
       - '!*.md'
       - '!LICENSE'
-      - '!.github/**'
-      - '.github/workflows/ci.yml'
   workflow_dispatch:
     inputs:
       release:
