@@ -1,6 +1,7 @@
 plugins {
     `java-library`
     alias(libs.plugins.shadow)
+    alias(libs.plugins.spotless)
 }
 
 group = "com.autostartstop"
@@ -53,6 +54,13 @@ dependencies {
     
     // Velocity API needed at test time for Adventure components
     testImplementation(libs.velocity.api)
+}
+
+spotless {
+    java {
+        googleJavaFormat()
+        formatAnnotations()
+    }
 }
 
 tasks {
