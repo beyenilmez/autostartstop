@@ -171,9 +171,12 @@ class VariableResolverTest {
     @Test
     @DisplayName("should clamp to [min, max]")
     void shouldClamp() {
-      assertEquals(0.0f, resolver.resolveFloatClampedFromString("-1.0", context, 0.5f, 0.0f, 1.0f), 0.001);
-      assertEquals(1.0f, resolver.resolveFloatClampedFromString("5.0", context, 0.5f, 0.0f, 1.0f), 0.001);
-      assertEquals(0.5f, resolver.resolveFloatClampedFromString("0.5", context, 0.0f, 0.0f, 1.0f), 0.001);
+      assertEquals(
+          0.0f, resolver.resolveFloatClampedFromString("-1.0", context, 0.5f, 0.0f, 1.0f), 0.001);
+      assertEquals(
+          1.0f, resolver.resolveFloatClampedFromString("5.0", context, 0.5f, 0.0f, 1.0f), 0.001);
+      assertEquals(
+          0.5f, resolver.resolveFloatClampedFromString("0.5", context, 0.0f, 0.0f, 1.0f), 0.001);
     }
   }
 

@@ -63,7 +63,8 @@ public class ConfigLoader {
     // so the file on disk matches config.yml exactly (comments, order, formatting).
     boolean configExists = Files.exists(configPath);
     if (!configExists) {
-      try (InputStream defaultConfigStream = getClass().getResourceAsStream("/config.yml")) {
+      try (InputStream defaultConfigStream =
+          ConfigLoader.class.getResourceAsStream("/config.yml")) {
         if (defaultConfigStream == null) {
           throw new IOException("Default config.yml not found in resources");
         }

@@ -64,7 +64,8 @@ public class PlayerCountCondition implements Condition {
     logger.debug("Server '{}' has {} players", resolvedServer, playerCount);
 
     if (equals != null && !equals.isBlank()) {
-      int resolvedEquals = variableResolver.resolveIntFromString(equals, context, Integer.MIN_VALUE);
+      int resolvedEquals =
+          variableResolver.resolveIntFromString(equals, context, Integer.MIN_VALUE);
       if (resolvedEquals != Integer.MIN_VALUE) {
         boolean result = playerCount == resolvedEquals;
         logger.debug("{} == {} -> {}", playerCount, resolvedEquals, result);

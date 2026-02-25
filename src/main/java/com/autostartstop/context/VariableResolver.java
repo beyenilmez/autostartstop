@@ -283,7 +283,8 @@ public class VariableResolver {
   }
 
   /** Resolves and parses a boolean. Accepts: true/false, yes/no, 1/0, on/off. */
-  public boolean resolveBooleanFromString(String raw, ExecutionContext context, boolean defaultValue) {
+  public boolean resolveBooleanFromString(
+      String raw, ExecutionContext context, boolean defaultValue) {
     if (raw == null || raw.isBlank()) {
       return defaultValue;
     }
