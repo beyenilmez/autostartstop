@@ -85,7 +85,6 @@ public class AutoStartStop {
   @Inject
   public AutoStartStop(
       ProxyServer proxy,
-      Logger velocityLogger,
       @DataDirectory Path dataDirectory,
       PluginContainer pluginContainer,
       Metrics.Factory metricsFactory) {
