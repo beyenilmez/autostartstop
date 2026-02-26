@@ -1,6 +1,5 @@
 package com.autostartstop.trigger.impl;
 
-import com.autostartstop.Log;
 import com.autostartstop.config.SettingsConfig;
 import com.autostartstop.config.TriggerConfig;
 import com.autostartstop.context.ExecutionContext;
@@ -26,6 +25,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Trigger that fires when a server has been empty (no players) for a specified duration. Uses a
@@ -40,7 +40,7 @@ import org.slf4j.Logger;
  * ${empty_server.empty_since} - ISO-8601 timestamp when server became empty
  */
 public class EmptyServerTrigger implements Trigger {
-  private static final Logger logger = Log.get(EmptyServerTrigger.class);
+  private static final Logger logger = LoggerFactory.getLogger(EmptyServerTrigger.class);
 
   /** Default interval for periodic check (used if settings not available) */
   private static final Duration DEFAULT_CHECK_INTERVAL = Duration.ofMinutes(5);

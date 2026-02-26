@@ -1,6 +1,5 @@
 package com.autostartstop.trigger.impl;
 
-import com.autostartstop.Log;
 import com.autostartstop.config.PluginConfig;
 import com.autostartstop.config.ServerConfig;
 import com.autostartstop.config.TriggerConfig;
@@ -26,6 +25,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import net.kyori.adventure.text.Component;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Trigger that fires when a client pings the proxy server (server list/MOTD requests). Emitted
@@ -38,7 +38,7 @@ import org.slf4j.Logger;
  * protocol version
  */
 public class PingTrigger implements Trigger {
-  private static final Logger logger = Log.get(PingTrigger.class);
+  private static final Logger logger = LoggerFactory.getLogger(PingTrigger.class);
 
   // Injected dependencies
   private final ProxyServer proxy;

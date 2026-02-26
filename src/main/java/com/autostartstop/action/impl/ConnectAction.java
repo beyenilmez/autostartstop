@@ -1,6 +1,5 @@
 package com.autostartstop.action.impl;
 
-import com.autostartstop.Log;
 import com.autostartstop.action.Action;
 import com.autostartstop.action.ActionContext;
 import com.autostartstop.action.ActionType;
@@ -18,10 +17,11 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import net.kyori.adventure.text.Component;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** Action that connects one or more players to a specified server. */
 public class ConnectAction implements Action {
-  private static final Logger logger = Log.get(ConnectAction.class);
+  private static final Logger logger = LoggerFactory.getLogger(ConnectAction.class);
   private static final String ACTION_NAME = "connect";
   private static final String DEFAULT_ERROR_MESSAGE =
       "<red>Could not connect to ${connect_server}: ${connect_error_reason}</red>";

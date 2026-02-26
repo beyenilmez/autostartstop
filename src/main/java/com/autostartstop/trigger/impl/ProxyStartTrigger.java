@@ -1,6 +1,5 @@
 package com.autostartstop.trigger.impl;
 
-import com.autostartstop.Log;
 import com.autostartstop.config.TriggerConfig;
 import com.autostartstop.context.ExecutionContext;
 import com.autostartstop.trigger.Trigger;
@@ -9,13 +8,14 @@ import com.autostartstop.trigger.TriggerType;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Trigger that fires when the Velocity proxy initializes. Since rules are loaded after
  * ProxyInitializeEvent has already fired, this trigger fires immediately upon activation.
  */
 public class ProxyStartTrigger implements Trigger {
-  private static final Logger logger = Log.get(ProxyStartTrigger.class);
+  private static final Logger logger = LoggerFactory.getLogger(ProxyStartTrigger.class);
 
   /** Creates a ProxyStartTrigger from the given configuration. */
   public static ProxyStartTrigger create(TriggerConfig config, TriggerContext context) {

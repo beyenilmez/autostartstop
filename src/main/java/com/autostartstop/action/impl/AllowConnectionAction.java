@@ -1,6 +1,5 @@
 package com.autostartstop.action.impl;
 
-import com.autostartstop.Log;
 import com.autostartstop.action.Action;
 import com.autostartstop.action.ActionContext;
 import com.autostartstop.action.ActionType;
@@ -12,13 +11,14 @@ import com.velocitypowered.api.event.player.ServerPreConnectEvent;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Action that allows a previously denied connection. This action modifies the ServerPreConnectEvent
  * to allow the connection to proceed.
  */
 public class AllowConnectionAction implements Action {
-  private static final Logger logger = Log.get(AllowConnectionAction.class);
+  private static final Logger logger = LoggerFactory.getLogger(AllowConnectionAction.class);
   private static final String ACTION_NAME = "allow_connection";
 
   private final String connectionParam;

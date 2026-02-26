@@ -1,6 +1,5 @@
 package com.autostartstop.condition.impl;
 
-import com.autostartstop.Log;
 import com.autostartstop.condition.Condition;
 import com.autostartstop.condition.ConditionContext;
 import com.autostartstop.condition.ConditionType;
@@ -10,10 +9,11 @@ import com.autostartstop.context.VariableResolver;
 import com.autostartstop.server.ServerManager;
 import java.util.Map;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** Checks player count on a server against min, max, or equals constraints. */
 public class PlayerCountCondition implements Condition {
-  private static final Logger logger = Log.get(PlayerCountCondition.class);
+  private static final Logger logger = LoggerFactory.getLogger(PlayerCountCondition.class);
 
   private final String server;
   private final String min;
@@ -64,7 +64,8 @@ public class PlayerCountCondition implements Condition {
     logger.debug("Server '{}' has {} players", resolvedServer, playerCount);
 
     if (equals != null && !equals.isBlank()) {
-      int resolvedEquals = variableResolver.resolveInt(equals, context, Integer.MIN_VALUE);
+      int resolvedEquals =
+          variableResolver.resolveIntFromString(equals, context, Integer.MIN_VALUE);
       if (resolvedEquals != Integer.MIN_VALUE) {
         boolean result = playerCount == resolvedEquals;
         logger.debug("{} == {} -> {}", playerCount, resolvedEquals, result);
@@ -73,7 +74,7 @@ public class PlayerCountCondition implements Condition {
     }
 
     if (min != null && !min.isBlank()) {
-      int resolvedMin = variableResolver.resolveInt(min, context, Integer.MIN_VALUE);
+      int resolvedMin = variableResolver.resolveIntFromString(min, context, Integer.MIN_VALUE);
       if (resolvedMin != Integer.MIN_VALUE && playerCount < resolvedMin) {
         logger.debug("{} < min({}) -> false", playerCount, resolvedMin);
         return false;
@@ -81,7 +82,7 @@ public class PlayerCountCondition implements Condition {
     }
 
     if (max != null && !max.isBlank()) {
-      int resolvedMax = variableResolver.resolveInt(max, context, Integer.MAX_VALUE);
+      int resolvedMax = variableResolver.resolveIntFromString(max, context, Integer.MAX_VALUE);
       if (resolvedMax != Integer.MAX_VALUE && playerCount > resolvedMax) {
         logger.debug("{} > max({}) -> false", playerCount, resolvedMax);
         return false;

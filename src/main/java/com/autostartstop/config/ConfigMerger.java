@@ -1,16 +1,16 @@
 package com.autostartstop.config;
 
-import com.autostartstop.Log;
 import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Merges default configurations with specific configurations. Specific values take precedence over
  * defaults.
  */
 public class ConfigMerger {
-  private static final Logger logger = Log.get(ConfigMerger.class);
+  private static final Logger logger = LoggerFactory.getLogger(ConfigMerger.class);
 
   /** Merges a server config with default server config. */
   public ServerConfig mergeServerConfig(ServerConfig specific, ServerConfig defaults) {

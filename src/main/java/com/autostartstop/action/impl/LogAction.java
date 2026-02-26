@@ -1,6 +1,5 @@
 package com.autostartstop.action.impl;
 
-import com.autostartstop.Log;
 import com.autostartstop.action.Action;
 import com.autostartstop.action.ActionContext;
 import com.autostartstop.action.ActionType;
@@ -9,10 +8,11 @@ import com.autostartstop.context.ExecutionContext;
 import com.autostartstop.context.VariableResolver;
 import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** Logs a message at a specified log level. */
 public class LogAction implements Action {
-  private static final Logger logger = Log.get(LogAction.class);
+  private static final Logger logger = LoggerFactory.getLogger(LogAction.class);
 
   private final String message;
   private final String level;

@@ -42,6 +42,7 @@ import java.nio.file.Path;
 import java.time.Duration;
 import org.bstats.velocity.Metrics;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Plugin(
     id = "autostartstop",
@@ -50,7 +51,7 @@ import org.slf4j.Logger;
     authors = {"beyenilmez"},
     description = "Automated server management with rule-based triggers and actions")
 public class AutoStartStop {
-  private static final Logger logger = Log.get(AutoStartStop.class);
+  private static final Logger logger = LoggerFactory.getLogger(AutoStartStop.class);
 
   private final ProxyServer proxy;
   private final Path dataDirectory;

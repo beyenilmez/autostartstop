@@ -1,6 +1,5 @@
 package com.autostartstop.condition.impl;
 
-import com.autostartstop.Log;
 import com.autostartstop.condition.Condition;
 import com.autostartstop.condition.ConditionContext;
 import com.autostartstop.condition.ConditionType;
@@ -9,13 +8,14 @@ import com.autostartstop.context.ExecutionContext;
 import com.autostartstop.context.VariableResolver;
 import java.util.Map;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Condition that compares two string values. Supports variable resolution and case-insensitive
  * comparison.
  */
 public class StringEqualsCondition implements Condition {
-  private static final Logger logger = Log.get(StringEqualsCondition.class);
+  private static final Logger logger = LoggerFactory.getLogger(StringEqualsCondition.class);
 
   private final String value;
   private final String equals;

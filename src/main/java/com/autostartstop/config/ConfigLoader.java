@@ -1,6 +1,5 @@
 package com.autostartstop.config;
 
-import com.autostartstop.Log;
 import dev.dejvokep.boostedyaml.YamlDocument;
 import dev.dejvokep.boostedyaml.block.implementation.Section;
 import dev.dejvokep.boostedyaml.dvs.versioning.BasicVersioning;
@@ -18,13 +17,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Loads and parses the plugin configuration using BoostedYAML. Uses ConfigParser for parsing
  * individual configuration sections.
  */
 public class ConfigLoader {
-  private static final Logger logger = Log.get(ConfigLoader.class);
+  private static final Logger logger = LoggerFactory.getLogger(ConfigLoader.class);
 
   /**
    * Config version for YamlDocument updater (version migration). Must match version in config.yml.
@@ -63,7 +63,8 @@ public class ConfigLoader {
     // so the file on disk matches config.yml exactly (comments, order, formatting).
     boolean configExists = Files.exists(configPath);
     if (!configExists) {
-      try (InputStream defaultConfigStream = getClass().getResourceAsStream("/config.yml")) {
+      try (InputStream defaultConfigStream =
+          ConfigLoader.class.getResourceAsStream("/config.yml")) {
         if (defaultConfigStream == null) {
           throw new IOException("Default config.yml not found in resources");
         }

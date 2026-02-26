@@ -1,6 +1,5 @@
 package com.autostartstop.server;
 
-import com.autostartstop.Log;
 import com.autostartstop.config.ServerConfig;
 import com.autostartstop.config.StartupTimerConfig;
 import com.autostartstop.util.DurationUtil;
@@ -10,6 +9,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Tracks server startup operations across all managed servers. Provides access to startup state,
@@ -19,7 +19,7 @@ import org.slf4j.Logger;
  * completes tracking when the server comes online (or times out).
  */
 public class ServerStartupTracker {
-  private static final Logger logger = Log.get(ServerStartupTracker.class);
+  private static final Logger logger = LoggerFactory.getLogger(ServerStartupTracker.class);
   private static final Duration DEFAULT_EXPECTED_TIME = Duration.ofSeconds(30);
   private static final long MONITOR_POLL_INTERVAL_MS = 1000; // Poll every second
   private static final long MONITOR_TIMEOUT_MS = 10 * 60 * 1000; // 10 minute timeout

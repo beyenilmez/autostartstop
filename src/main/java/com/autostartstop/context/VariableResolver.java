@@ -1,6 +1,5 @@
 package com.autostartstop.context;
 
-import com.autostartstop.Log;
 import com.autostartstop.server.ManagedServer;
 import com.autostartstop.server.ServerManager;
 import com.autostartstop.server.ServerStartupTracker;
@@ -9,6 +8,7 @@ import com.autostartstop.util.DurationUtil;
 import java.time.Duration;
 import java.util.List;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Resolves ${...} variable placeholders and provides type-safe parsing.
@@ -22,7 +22,7 @@ import org.slf4j.Logger;
  * </ul>
  */
 public class VariableResolver {
-  private static final Logger logger = Log.get(VariableResolver.class);
+  private static final Logger logger = LoggerFactory.getLogger(VariableResolver.class);
 
   private ServerManager serverManager;
   private ServerStartupTracker serverStartupTracker;
@@ -190,7 +190,7 @@ public class VariableResolver {
   }
 
   /** Resolves and parses an integer. */
-  public int resolveInt(String raw, ExecutionContext context, int defaultValue) {
+  public int resolveIntFromString(String raw, ExecutionContext context, int defaultValue) {
     if (raw == null || raw.isBlank()) {
       return defaultValue;
     }
@@ -216,7 +216,7 @@ public class VariableResolver {
     if (raw instanceof Number) {
       return ((Number) raw).intValue();
     }
-    return resolveInt(raw.toString(), context, defaultValue);
+    return resolveIntFromString(raw.toString(), context, defaultValue);
   }
 
   /** Resolves and parses a long. */
@@ -239,7 +239,7 @@ public class VariableResolver {
   }
 
   /** Resolves and parses a double. */
-  public double resolveDouble(String raw, ExecutionContext context, double defaultValue) {
+  public double resolveDoubleFromString(String raw, ExecutionContext context, double defaultValue) {
     if (raw == null || raw.isBlank()) {
       return defaultValue;
     }
@@ -265,13 +265,13 @@ public class VariableResolver {
     if (raw instanceof Number) {
       return ((Number) raw).doubleValue();
     }
-    return resolveDouble(raw.toString(), context, defaultValue);
+    return resolveDoubleFromString(raw.toString(), context, defaultValue);
   }
 
   /** Resolves a float clamped to [min, max]. */
-  public float resolveFloatClamped(
+  public float resolveFloatClampedFromString(
       String raw, ExecutionContext context, float defaultValue, float min, float max) {
-    float value = (float) resolveDouble(raw, context, defaultValue);
+    float value = (float) resolveDoubleFromString(raw, context, defaultValue);
     return Math.max(min, Math.min(max, value));
   }
 
@@ -283,7 +283,8 @@ public class VariableResolver {
   }
 
   /** Resolves and parses a boolean. Accepts: true/false, yes/no, 1/0, on/off. */
-  public boolean resolveBoolean(String raw, ExecutionContext context, boolean defaultValue) {
+  public boolean resolveBooleanFromString(
+      String raw, ExecutionContext context, boolean defaultValue) {
     if (raw == null || raw.isBlank()) {
       return defaultValue;
     }
@@ -312,7 +313,7 @@ public class VariableResolver {
     if (raw instanceof Boolean) {
       return (Boolean) raw;
     }
-    return resolveBoolean(raw.toString(), context, defaultValue);
+    return resolveBooleanFromString(raw.toString(), context, defaultValue);
   }
 
   /** Resolves and parses an enum value. Case-insensitive, converts hyphens to underscores. */

@@ -1,6 +1,5 @@
 package com.autostartstop.condition.impl;
 
-import com.autostartstop.Log;
 import com.autostartstop.condition.Condition;
 import com.autostartstop.condition.ConditionContext;
 import com.autostartstop.condition.ConditionType;
@@ -9,10 +8,11 @@ import com.autostartstop.context.ExecutionContext;
 import com.autostartstop.context.VariableResolver;
 import java.util.Map;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** Compares a numeric value against min, max, or equals constraints. */
 public class NumberCompareCondition implements Condition {
-  private static final Logger logger = Log.get(NumberCompareCondition.class);
+  private static final Logger logger = LoggerFactory.getLogger(NumberCompareCondition.class);
 
   private final String value;
   private final String min;
@@ -50,7 +50,7 @@ public class NumberCompareCondition implements Condition {
 
   @Override
   public boolean evaluate(ExecutionContext context) {
-    double numValue = variableResolver.resolveDouble(value, context, Double.NaN);
+    double numValue = variableResolver.resolveDoubleFromString(value, context, Double.NaN);
     if (Double.isNaN(numValue)) {
       logger.warn("Failed to parse value '{}' as number", value);
       return false;
@@ -58,7 +58,7 @@ public class NumberCompareCondition implements Condition {
     logger.debug("Evaluating value {} (from '{}')", numValue, value);
 
     if (equals != null && !equals.isBlank()) {
-      double resolvedEquals = variableResolver.resolveDouble(equals, context, Double.NaN);
+      double resolvedEquals = variableResolver.resolveDoubleFromString(equals, context, Double.NaN);
       if (!Double.isNaN(resolvedEquals)) {
         boolean result = Double.compare(numValue, resolvedEquals) == 0;
         logger.debug("{} == {} -> {}", numValue, resolvedEquals, result);
@@ -67,7 +67,7 @@ public class NumberCompareCondition implements Condition {
     }
 
     if (min != null && !min.isBlank()) {
-      double resolvedMin = variableResolver.resolveDouble(min, context, Double.NaN);
+      double resolvedMin = variableResolver.resolveDoubleFromString(min, context, Double.NaN);
       if (!Double.isNaN(resolvedMin) && numValue < resolvedMin) {
         logger.debug("{} < min({}) -> false", numValue, resolvedMin);
         return false;
@@ -75,7 +75,7 @@ public class NumberCompareCondition implements Condition {
     }
 
     if (max != null && !max.isBlank()) {
-      double resolvedMax = variableResolver.resolveDouble(max, context, Double.NaN);
+      double resolvedMax = variableResolver.resolveDoubleFromString(max, context, Double.NaN);
       if (!Double.isNaN(resolvedMax) && numValue > resolvedMax) {
         logger.debug("{} > max({}) -> false", numValue, resolvedMax);
         return false;

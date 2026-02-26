@@ -1,6 +1,5 @@
 package com.autostartstop.template.impl;
 
-import com.autostartstop.Log;
 import com.autostartstop.action.impl.StartAction;
 import com.autostartstop.config.TemplateConfig;
 import com.autostartstop.context.ExecutionContext;
@@ -12,6 +11,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Template that starts servers when the proxy starts.
@@ -21,7 +21,7 @@ import org.slf4j.Logger;
  * <p>Uses ProxyStartTrigger internally to detect startup and StartAction to start servers.
  */
 public class StartOnProxyStartTemplate implements Template {
-  private static final Logger logger = Log.get(StartOnProxyStartTemplate.class);
+  private static final Logger logger = LoggerFactory.getLogger(StartOnProxyStartTemplate.class);
 
   private final TemplateContext context;
   private final List<String> servers;

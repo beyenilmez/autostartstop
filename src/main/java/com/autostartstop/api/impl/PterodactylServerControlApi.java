@@ -1,6 +1,5 @@
 package com.autostartstop.api.impl;
 
-import com.autostartstop.Log;
 import com.autostartstop.api.ServerControlApi;
 import com.autostartstop.config.ControlApiConfig;
 import com.autostartstop.server.ServerState;
@@ -19,13 +18,14 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Pterodactyl Panel-based implementation of ServerControlApi using Client API. Connects to
  * Pterodactyl panel, authenticates with API key, and controls servers.
  */
 public class PterodactylServerControlApi implements ServerControlApi {
-  private static final Logger logger = Log.get(PterodactylServerControlApi.class);
+  private static final Logger logger = LoggerFactory.getLogger(PterodactylServerControlApi.class);
   private static final String TYPE = "pterodactyl";
   private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(30);
 

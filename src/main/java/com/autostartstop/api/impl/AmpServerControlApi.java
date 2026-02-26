@@ -1,6 +1,5 @@
 package com.autostartstop.api.impl;
 
-import com.autostartstop.Log;
 import com.autostartstop.api.ServerControlApi;
 import com.autostartstop.config.ControlApiConfig;
 import com.autostartstop.server.ServerState;
@@ -20,13 +19,14 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * AMP Panel-based implementation of ServerControlApi using ADS (Application Deployment System).
  * Connects to ADS, finds the instance by ID, and controls that specific server.
  */
 public class AmpServerControlApi implements ServerControlApi {
-  private static final Logger logger = Log.get(AmpServerControlApi.class);
+  private static final Logger logger = LoggerFactory.getLogger(AmpServerControlApi.class);
   private static final String TYPE = "amp";
   private static final long DEFAULT_INSTANCE_START_TIMEOUT_MS = 30000; // 30 seconds
 

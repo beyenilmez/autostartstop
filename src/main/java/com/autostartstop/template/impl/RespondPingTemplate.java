@@ -1,6 +1,5 @@
 package com.autostartstop.template.impl;
 
-import com.autostartstop.Log;
 import com.autostartstop.action.Action;
 import com.autostartstop.config.ActionConfig;
 import com.autostartstop.config.ConfigAccessor;
@@ -17,6 +16,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Template that customizes ping responses based on server status.
@@ -47,7 +47,7 @@ import org.slf4j.Logger;
  * <p>At least one of offline or online sections is required.
  */
 public class RespondPingTemplate implements Template {
-  private static final Logger logger = Log.get(RespondPingTemplate.class);
+  private static final Logger logger = LoggerFactory.getLogger(RespondPingTemplate.class);
 
   private final TemplateContext context;
   private final List<String> virtualHosts;
