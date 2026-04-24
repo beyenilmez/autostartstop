@@ -18,6 +18,11 @@
         "matchFileNames": ["gradle/libs.versions.toml"],
         "matchUpdateTypes": ["minor", "patch"],
         "groupName": "Gradle dependencies (non-major)"
+      },
+      {
+        "description": "Group all GitHub Actions updates into a single PR",
+        "matchManagers": ["github-actions"],
+        "groupName": "GitHub Actions"
       }
     ]
   }
