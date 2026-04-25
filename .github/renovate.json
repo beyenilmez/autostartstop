@@ -9,8 +9,8 @@
     "ignorePaths": ["docs/requirements-lock.txt"],
     "packageRules": [
       {
-        "description": "Docs Python dependencies: show on dashboard only, no automatic PRs",
-        "matchFileNames": ["docs/requirements.txt"],
+        "description": "Docs Python tooling: show on dashboard only, no automatic PRs",
+        "matchManagers": ["pip_requirements", "pyenv"],
         "dependencyDashboardApproval": true
       },
       {
