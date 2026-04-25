@@ -20,7 +20,7 @@ AutoStartStop uses the following open-source libraries and frameworks:
 <!-- renovate: datasource=maven depName=com.cronutils:cron-utils -->
 | [Cron Utils](https://github.com/jmrozanec/cron-utils) | 9.2.1 | Cron expression parsing and scheduling | Apache-2.0 |
 <!-- renovate: datasource=maven depName=com.google.code.gson:gson -->
-| [Gson](https://github.com/google/gson) | 2.13.2 | JSON parsing library | Apache-2.0 |
+| [Gson](https://github.com/google/gson) | 2.14.0 | JSON parsing library | Apache-2.0 |
 <!-- renovate: datasource=maven depName=org.kohsuke:github-api -->
 | [GitHub API](https://github.com/hub4j/github-api) | 1.330 | GitHub API client for update checker | MIT |
 <!-- renovate: datasource=maven depName=org.bstats:bstats-velocity -->
@@ -35,7 +35,7 @@ The following libraries are used for testing:
 <!-- renovate: datasource=maven depName=org.junit.jupiter:junit-jupiter -->
 | [JUnit Jupiter](https://github.com/junit-team/junit5) | 6.0.3 | Unit testing framework for Java | EPL-2.0 |
 <!-- renovate: datasource=maven depName=org.mockito:mockito-core -->
-| [Mockito](https://github.com/mockito/mockito) | 5.21.0 | Mocking framework for unit tests | MIT |
+| [Mockito](https://github.com/mockito/mockito) | 5.23.0 | Mocking framework for unit tests | MIT |
 
 ## Documentation Tools
 
