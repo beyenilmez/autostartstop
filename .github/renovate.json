@@ -36,7 +36,7 @@
         "customType": "regex",
         "managerFilePatterns": ["/^docs/src/credits\\.md$/"],
         "matchStrings": [
-          "<!--\\s*renovate:\\s*datasource=(?<datasource>\\S+)\\s+depName=(?<depName>\\S+)\\s*-->[^\\n]*\\n[^|]*\\|[^|]*\\|\\s*(?<currentValue>[^\\s|]+)\\s*\\|"
+          "\\|\\s*(?<currentValue>[^\\s|<]+)\\s*<!--\\s*renovate:\\s*datasource=(?<datasource>\\S+)\\s+depName=(?<depName>\\S+)\\s*-->"
         ]
       }
     ]
