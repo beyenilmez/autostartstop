@@ -9,8 +9,8 @@
     "ignorePaths": ["docs/requirements-lock.txt"],
     "packageRules": [
       {
-        "description": "Docs dependencies: show on dashboard only, no automatic PRs",
-        "matchFileNames": ["docs/**"],
+        "description": "Docs Python dependencies: show on dashboard only, no automatic PRs",
+        "matchFileNames": ["docs/requirements.txt"],
         "dependencyDashboardApproval": true
       },
       {
@@ -23,6 +23,16 @@
         "description": "Group all GitHub Actions updates into a single PR",
         "matchManagers": ["github-actions"],
         "groupName": "GitHub Actions"
+      }
+    ],
+    "customManagers": [
+      {
+        "description": "Keep version table in docs/src/credits.md in sync with Gradle deps",
+        "customType": "regex",
+        "managerFilePatterns": ["/^docs/src/credits\\.md$/"],
+        "matchStrings": [
+          "<!--\\s*renovate:\\s*datasource=(?<datasource>\\S+)\\s+depName=(?<depName>\\S+)\\s*-->[^\\n]*\\n[^|]*\\|[^|]*\\|\\s*(?<currentValue>[^\\s|]+)\\s*\\|"
+        ]
       }
     ]
   }
