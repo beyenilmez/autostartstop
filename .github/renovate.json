@@ -14,8 +14,8 @@
         "dependencyDashboardApproval": true
       },
       {
-        "description": "Group non-major Gradle library updates",
-        "matchFileNames": ["gradle/libs.versions.toml"],
+        "description": "Group non-major Gradle library updates (incl. credits.md mirror)",
+        "matchManagers": ["gradle", "custom.regex"],
         "matchUpdateTypes": ["minor", "patch"],
         "groupName": "Gradle dependencies (non-major)"
       },
@@ -23,6 +23,11 @@
         "description": "Group all GitHub Actions updates into a single PR",
         "matchManagers": ["github-actions"],
         "groupName": "GitHub Actions"
+      },
+      {
+        "description": "AMP API lives in the NeuralNexus Maven repo",
+        "matchPackageNames": ["dev.neuralnexus:ampapi"],
+        "registryUrls": ["https://maven.neuralnexus.dev/releases"]
       }
     ],
     "customManagers": [
