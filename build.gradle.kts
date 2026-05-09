@@ -2,6 +2,7 @@ plugins {
     `java-library`
     alias(libs.plugins.shadow)
     alias(libs.plugins.spotless)
+    alias(libs.plugins.blossom)
 }
 
 group = "com.autostartstop"
@@ -20,6 +21,16 @@ repositories {
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(libs.versions.java.get().toInt())
+    }
+}
+
+sourceSets {
+    main {
+        blossom {
+            javaSources {
+                property("version", project.version.toString())
+            }
+        }
     }
 }
 

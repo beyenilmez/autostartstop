@@ -47,7 +47,8 @@ import org.slf4j.LoggerFactory;
 @Plugin(
     id = "autostartstop",
     name = "AutoStartStop",
-    version = "1.1.0-beta",
+    version = Constants.VERSION,
+    url = "https://github.com/beyenilmez/autostartstop",
     authors = {"beyenilmez"},
     description = "Automated server management with rule-based triggers and actions")
 public class AutoStartStop {
@@ -98,8 +99,7 @@ public class AutoStartStop {
   public void onProxyInitialization(ProxyInitializeEvent event) {
     logger.info("Enabling AutoStartStop...");
     logger.debug("Data directory: {}", dataDirectory);
-    logger.debug(
-        "Plugin version: {}", pluginContainer.getDescription().getVersion().orElse("unknown"));
+    logger.debug("Plugin version: {}", Constants.VERSION);
 
     try {
       // Initialize components
@@ -123,8 +123,7 @@ public class AutoStartStop {
       if (pluginConfig != null
           && pluginConfig.getSettings() != null
           && pluginConfig.getSettings().isCheckForUpdates()) {
-        String currentVersion = pluginContainer.getDescription().getVersion().orElse("0.0.0");
-        new UpdateChecker(currentVersion).checkAsync(null);
+        new UpdateChecker(Constants.VERSION).checkAsync(null);
       }
 
       logger.debug("Phase 5/5: Initialization complete");

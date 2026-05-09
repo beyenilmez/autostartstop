@@ -21,6 +21,7 @@ mockito = "5.23.0"
 # Plugins
 shadow = "9.4.1"
 spotless = "8.4.0"
+blossom = "2.2.0"
 
 [libraries]
 # Velocity API
@@ -53,3 +54,4 @@ amp = ["ampapi", "result4j"]
 [plugins]
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+blossom = { id = "net.kyori.blossom", version.ref = "blossom" }
