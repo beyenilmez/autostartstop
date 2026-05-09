@@ -1,5 +1,6 @@
 package com.autostartstop.trigger.impl;
 
+import com.autostartstop.PluginLogger;
 import com.autostartstop.config.TriggerConfig;
 import com.autostartstop.context.ExecutionContext;
 import com.autostartstop.trigger.Trigger;
@@ -11,11 +12,10 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /** Trigger that fires when the Velocity proxy shuts down. */
 public class ProxyShutdownTrigger implements Trigger {
-  private static final Logger logger = LoggerFactory.getLogger(ProxyShutdownTrigger.class);
+  private static final Logger logger = PluginLogger.get(ProxyShutdownTrigger.class);
 
   private final ProxyServer proxy;
   private final Object plugin;

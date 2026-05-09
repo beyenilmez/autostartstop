@@ -1,5 +1,6 @@
 package com.autostartstop.template.impl;
 
+import com.autostartstop.PluginLogger;
 import com.autostartstop.action.impl.StopAction;
 import com.autostartstop.config.TemplateConfig;
 import com.autostartstop.context.ExecutionContext;
@@ -14,7 +15,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Template that stops servers when the proxy shuts down.
@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
  * <p>Uses ProxyShutdownTrigger internally to detect shutdown and StopAction to stop servers.
  */
 public class StopOnProxyShutdownTemplate implements Template {
-  private static final Logger logger = LoggerFactory.getLogger(StopOnProxyShutdownTemplate.class);
+  private static final Logger logger = PluginLogger.get(StopOnProxyShutdownTemplate.class);
 
   private final TemplateContext context;
   private final List<String> servers;

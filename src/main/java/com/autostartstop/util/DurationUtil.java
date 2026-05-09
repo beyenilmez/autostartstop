@@ -1,10 +1,10 @@
 package com.autostartstop.util;
 
+import com.autostartstop.PluginLogger;
 import java.time.Duration;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Parses human-readable duration strings into Duration objects. Supports single unit format: 10t
@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
  * (e.g., "500" = 500ms) Note: 1 tick = 50ms (20 ticks per second)
  */
 public class DurationUtil {
-  private static final Logger logger = LoggerFactory.getLogger(DurationUtil.class);
+  private static final Logger logger = PluginLogger.get(DurationUtil.class);
   private static final Pattern DURATION_PATTERN =
       Pattern.compile("^(\\d+)(t|ms|s|m|h)?$", Pattern.CASE_INSENSITIVE);
 

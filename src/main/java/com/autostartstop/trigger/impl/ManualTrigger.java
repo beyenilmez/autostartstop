@@ -1,5 +1,6 @@
 package com.autostartstop.trigger.impl;
 
+import com.autostartstop.PluginLogger;
 import com.autostartstop.config.ConfigException;
 import com.autostartstop.config.TriggerConfig;
 import com.autostartstop.context.ExecutionContext;
@@ -9,7 +10,6 @@ import com.autostartstop.trigger.TriggerType;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Trigger that fires via console command. Emitted context: - ${manual.id} - The trigger ID -
@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
  * count
  */
 public class ManualTrigger implements Trigger {
-  private static final Logger logger = LoggerFactory.getLogger(ManualTrigger.class);
+  private static final Logger logger = PluginLogger.get(ManualTrigger.class);
 
   private final String id;
 

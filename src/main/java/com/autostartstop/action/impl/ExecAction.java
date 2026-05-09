@@ -1,5 +1,6 @@
 package com.autostartstop.action.impl;
 
+import com.autostartstop.PluginLogger;
 import com.autostartstop.action.Action;
 import com.autostartstop.action.ActionContext;
 import com.autostartstop.action.ActionType;
@@ -12,11 +13,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /** Executes a shell command with optional working directory, timeout, and environment variables. */
 public class ExecAction implements Action {
-  private static final Logger logger = LoggerFactory.getLogger(ExecAction.class);
+  private static final Logger logger = PluginLogger.get(ExecAction.class);
 
   private final String command;
   private final String workingDirectory;

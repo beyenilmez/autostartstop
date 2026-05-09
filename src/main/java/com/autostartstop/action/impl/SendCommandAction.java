@@ -1,5 +1,6 @@
 package com.autostartstop.action.impl;
 
+import com.autostartstop.PluginLogger;
 import com.autostartstop.action.Action;
 import com.autostartstop.action.ActionContext;
 import com.autostartstop.action.ActionType;
@@ -9,11 +10,10 @@ import com.autostartstop.context.VariableResolver;
 import com.autostartstop.server.ServerManager;
 import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /** Action that sends a command to a server's console. */
 public class SendCommandAction implements Action {
-  private static final Logger logger = LoggerFactory.getLogger(SendCommandAction.class);
+  private static final Logger logger = PluginLogger.get(SendCommandAction.class);
   private static final String ACTION_NAME = "send_command";
 
   private final String server;

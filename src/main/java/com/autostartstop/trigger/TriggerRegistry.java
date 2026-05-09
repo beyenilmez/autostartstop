@@ -1,9 +1,9 @@
 package com.autostartstop.trigger;
 
+import com.autostartstop.PluginLogger;
 import com.autostartstop.config.ConfigException;
 import com.autostartstop.config.TriggerConfig;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Registry for trigger creators. Manages the creation of triggers using static create methods
@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
  */
 public class TriggerRegistry {
 
-  private static final Logger logger = LoggerFactory.getLogger(TriggerRegistry.class);
+  private static final Logger logger = PluginLogger.get(TriggerRegistry.class);
   private TriggerContext triggerContext;
 
   public TriggerRegistry() {}

@@ -1,12 +1,12 @@
 package com.autostartstop.server;
 
+import com.autostartstop.PluginLogger;
 import java.io.*;
 import java.nio.file.*;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Tracks server startup times and calculates expected startup durations based on historical data.
@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
  * <p>Data is persisted to a file and trimmed periodically to prevent excessive file size.
  */
 public class StartupTimeTracker {
-  private static final Logger logger = LoggerFactory.getLogger(StartupTimeTracker.class);
+  private static final Logger logger = PluginLogger.get(StartupTimeTracker.class);
 
   private static final String DATA_FILE_NAME = "startup_times.dat";
   private static final int MAX_ENTRIES_PER_SERVER = 20;

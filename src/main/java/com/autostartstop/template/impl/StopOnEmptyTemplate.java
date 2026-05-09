@@ -1,5 +1,6 @@
 package com.autostartstop.template.impl;
 
+import com.autostartstop.PluginLogger;
 import com.autostartstop.action.impl.StopAction;
 import com.autostartstop.config.TemplateConfig;
 import com.autostartstop.config.TriggerConfig;
@@ -16,7 +17,6 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Template that stops servers when they become empty for a specified duration.
@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
  * <p>Uses EmptyServerTrigger internally to monitor servers and StopAction to stop them.
  */
 public class StopOnEmptyTemplate implements Template {
-  private static final Logger logger = LoggerFactory.getLogger(StopOnEmptyTemplate.class);
+  private static final Logger logger = PluginLogger.get(StopOnEmptyTemplate.class);
 
   private final TemplateContext context;
   private final Duration emptyTime;

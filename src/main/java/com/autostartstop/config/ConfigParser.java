@@ -1,5 +1,6 @@
 package com.autostartstop.config;
 
+import com.autostartstop.PluginLogger;
 import dev.dejvokep.boostedyaml.block.implementation.Section;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Utility class for parsing configuration from YAML sections. Provides reusable parsing methods to
@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class ConfigParser {
 
-  private static final Logger logger = LoggerFactory.getLogger(ConfigParser.class);
+  private static final Logger logger = PluginLogger.get(ConfigParser.class);
 
   private ConfigParser() {
     // Utility class

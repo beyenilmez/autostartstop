@@ -1,5 +1,6 @@
 package com.autostartstop.action.impl;
 
+import com.autostartstop.PluginLogger;
 import com.autostartstop.action.AbstractPlayerTargetingAction;
 import com.autostartstop.action.ActionContext;
 import com.autostartstop.action.ActionType;
@@ -10,11 +11,10 @@ import com.velocitypowered.api.proxy.Player;
 import java.util.List;
 import java.util.Set;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /** Action that clears the title for one or more players. */
 public class ClearTitleAction extends AbstractPlayerTargetingAction {
-  private static final Logger logger = LoggerFactory.getLogger(ClearTitleAction.class);
+  private static final Logger logger = PluginLogger.get(ClearTitleAction.class);
 
   public ClearTitleAction(
       String playerParam,

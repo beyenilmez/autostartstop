@@ -1,5 +1,6 @@
 package com.autostartstop.update;
 
+import com.autostartstop.PluginLogger;
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -11,14 +12,13 @@ import org.kohsuke.github.GHRelease;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Checks GitHub releases for newer plugin versions and notifies when an update is available. Uses
  * the hub4j github-api library for API access.
  */
 public class UpdateChecker {
-  private static final Logger logger = LoggerFactory.getLogger(UpdateChecker.class);
+  private static final Logger logger = PluginLogger.get(UpdateChecker.class);
   private static final String GITHUB_RELEASES =
       "https://github.com/beyenilmez/autostartstop/releases";
   private static final String MODRINTH = "https://modrinth.com/plugin/autostartstop";

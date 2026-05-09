@@ -1,9 +1,9 @@
 package com.autostartstop.template;
 
+import com.autostartstop.PluginLogger;
 import com.autostartstop.config.ConfigException;
 import com.autostartstop.config.TemplateConfig;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Registry for template creators. Manages the creation of templates using static create methods
@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
  */
 public class TemplateRegistry {
 
-  private static final Logger logger = LoggerFactory.getLogger(TemplateRegistry.class);
+  private static final Logger logger = PluginLogger.get(TemplateRegistry.class);
   private TemplateContext templateContext;
 
   public TemplateRegistry() {}

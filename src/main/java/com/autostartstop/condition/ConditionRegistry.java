@@ -1,10 +1,10 @@
 package com.autostartstop.condition;
 
+import com.autostartstop.PluginLogger;
 import com.autostartstop.config.ConfigException;
 import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Registry for condition creators. Manages the creation of conditions using static create methods
@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ConditionRegistry {
 
-  private static final Logger logger = LoggerFactory.getLogger(ConditionRegistry.class);
+  private static final Logger logger = PluginLogger.get(ConditionRegistry.class);
   private ConditionContext conditionContext;
 
   public ConditionRegistry() {}

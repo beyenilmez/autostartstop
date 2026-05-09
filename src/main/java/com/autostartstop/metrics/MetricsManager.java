@@ -1,5 +1,6 @@
 package com.autostartstop.metrics;
 
+import com.autostartstop.PluginLogger;
 import com.autostartstop.config.PluginConfig;
 import com.autostartstop.config.RuleConfig;
 import com.autostartstop.config.ServerConfig;
@@ -13,14 +14,13 @@ import org.bstats.charts.SimplePie;
 import org.bstats.charts.SingleLineChart;
 import org.bstats.velocity.Metrics;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Manages bStats metrics for the plugin. Collects anonymous usage statistics to help improve the
  * plugin.
  */
 public class MetricsManager {
-  private static final Logger logger = LoggerFactory.getLogger(MetricsManager.class);
+  private static final Logger logger = PluginLogger.get(MetricsManager.class);
   private static final int BSTATS_PLUGIN_ID = 29120;
 
   private final Metrics metrics;

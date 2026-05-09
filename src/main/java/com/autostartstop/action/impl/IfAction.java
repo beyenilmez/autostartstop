@@ -1,5 +1,6 @@
 package com.autostartstop.action.impl;
 
+import com.autostartstop.PluginLogger;
 import com.autostartstop.action.Action;
 import com.autostartstop.action.ActionContext;
 import com.autostartstop.action.ActionRegistry;
@@ -14,11 +15,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /** Action that provides conditional execution with if/else_if/else branching. */
 public class IfAction implements Action {
-  private static final Logger logger = LoggerFactory.getLogger(IfAction.class);
+  private static final Logger logger = PluginLogger.get(IfAction.class);
   private static final String ACTION_NAME = "if";
 
   private final ConditionConfig primaryCondition;

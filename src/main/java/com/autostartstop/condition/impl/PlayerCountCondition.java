@@ -1,5 +1,6 @@
 package com.autostartstop.condition.impl;
 
+import com.autostartstop.PluginLogger;
 import com.autostartstop.condition.Condition;
 import com.autostartstop.condition.ConditionContext;
 import com.autostartstop.condition.ConditionType;
@@ -9,11 +10,10 @@ import com.autostartstop.context.VariableResolver;
 import com.autostartstop.server.ServerManager;
 import java.util.Map;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /** Checks player count on a server against min, max, or equals constraints. */
 public class PlayerCountCondition implements Condition {
-  private static final Logger logger = LoggerFactory.getLogger(PlayerCountCondition.class);
+  private static final Logger logger = PluginLogger.get(PlayerCountCondition.class);
 
   private final String server;
   private final String min;

@@ -1,5 +1,6 @@
 package com.autostartstop.util;
 
+import com.autostartstop.PluginLogger;
 import com.autostartstop.context.ExecutionContext;
 import com.autostartstop.context.VariableResolver;
 import com.velocitypowered.api.proxy.Player;
@@ -12,7 +13,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Utility class for resolving target players and servers from action parameters. Centralizes the
@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
  * </ul>
  */
 public class TargetResolver {
-  private static final Logger logger = LoggerFactory.getLogger(TargetResolver.class);
+  private static final Logger logger = PluginLogger.get(TargetResolver.class);
 
   private final VariableResolver variableResolver;
   private final ProxyServer proxy;

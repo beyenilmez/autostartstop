@@ -1,5 +1,6 @@
 package com.autostartstop.server;
 
+import com.autostartstop.PluginLogger;
 import com.autostartstop.config.PluginConfig;
 import com.autostartstop.config.ServerConfig;
 import com.autostartstop.util.DurationUtil;
@@ -19,14 +20,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import net.kyori.adventure.text.Component;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Manages MOTD caching for virtual hosts. Caches MOTD responses from servers and stores them in
  * MiniMessage format.
  */
 public class MotdCacheManager {
-  private static final Logger logger = LoggerFactory.getLogger(MotdCacheManager.class);
+  private static final Logger logger = PluginLogger.get(MotdCacheManager.class);
 
   private final ProxyServer proxy;
   private final ServerManager serverManager;

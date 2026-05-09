@@ -1,5 +1,6 @@
 package com.autostartstop.action;
 
+import com.autostartstop.PluginLogger;
 import com.autostartstop.context.ExecutionContext;
 import com.autostartstop.util.TargetResolver;
 import com.velocitypowered.api.proxy.Player;
@@ -7,7 +8,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Abstract base class for actions that target one or more players. Provides common player/server
@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
  * </ul>
  */
 public abstract class AbstractPlayerTargetingAction implements Action {
-  private static final Logger logger = LoggerFactory.getLogger(AbstractPlayerTargetingAction.class);
+  private static final Logger logger = PluginLogger.get(AbstractPlayerTargetingAction.class);
 
   protected final String playerParam;
   protected final List<String> playersParam;

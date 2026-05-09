@@ -1,5 +1,6 @@
 package com.autostartstop.action.impl;
 
+import com.autostartstop.PluginLogger;
 import com.autostartstop.action.Action;
 import com.autostartstop.action.ActionContext;
 import com.autostartstop.action.ActionType;
@@ -11,11 +12,10 @@ import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /** Action that sleeps for a specified duration. */
 public class SleepAction implements Action {
-  private static final Logger logger = LoggerFactory.getLogger(SleepAction.class);
+  private static final Logger logger = PluginLogger.get(SleepAction.class);
 
   private final String duration;
   private final VariableResolver variableResolver;

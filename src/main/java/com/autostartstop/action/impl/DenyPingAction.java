@@ -1,5 +1,6 @@
 package com.autostartstop.action.impl;
 
+import com.autostartstop.PluginLogger;
 import com.autostartstop.action.Action;
 import com.autostartstop.action.ActionContext;
 import com.autostartstop.action.ActionType;
@@ -10,14 +11,13 @@ import com.velocitypowered.api.event.ResultedEvent;
 import com.velocitypowered.api.event.proxy.ProxyPingEvent;
 import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Action that denies a ping request. This action cancels the ProxyPingEvent to prevent the ping
  * response from being sent.
  */
 public class DenyPingAction implements Action {
-  private static final Logger logger = LoggerFactory.getLogger(DenyPingAction.class);
+  private static final Logger logger = PluginLogger.get(DenyPingAction.class);
   private static final String ACTION_NAME = "deny_ping";
 
   private final String pingEventParam;

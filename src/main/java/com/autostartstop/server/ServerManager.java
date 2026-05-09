@@ -1,5 +1,6 @@
 package com.autostartstop.server;
 
+import com.autostartstop.PluginLogger;
 import com.autostartstop.api.ServerControlApi;
 import com.autostartstop.api.ServerControlApiRegistry;
 import com.autostartstop.config.PluginConfig;
@@ -14,11 +15,10 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /** Manages all servers controlled by the plugin. */
 public class ServerManager {
-  private static final Logger logger = LoggerFactory.getLogger(ServerManager.class);
+  private static final Logger logger = PluginLogger.get(ServerManager.class);
 
   private final Map<String, ManagedServer> servers = new ConcurrentHashMap<>();
   private final ProxyServer proxy;

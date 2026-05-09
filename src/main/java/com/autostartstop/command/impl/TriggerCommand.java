@@ -1,5 +1,6 @@
 package com.autostartstop.command.impl;
 
+import com.autostartstop.PluginLogger;
 import com.autostartstop.command.SubCommand;
 import com.autostartstop.rule.RuleManager;
 import com.autostartstop.trigger.impl.ManualTrigger;
@@ -9,11 +10,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /** Subcommand for manually triggering rules. */
 public class TriggerCommand implements SubCommand {
-  private static final Logger logger = LoggerFactory.getLogger(TriggerCommand.class);
+  private static final Logger logger = PluginLogger.get(TriggerCommand.class);
   private static final String PERMISSION = "autostartstop.command.trigger";
 
   private final RuleManager ruleManager;
