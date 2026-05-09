@@ -1,5 +1,6 @@
 package com.autostartstop.trigger.impl;
 
+import com.autostartstop.PluginLogger;
 import com.autostartstop.config.TriggerConfig;
 import com.autostartstop.context.ExecutionContext;
 import com.autostartstop.server.ServerManager;
@@ -16,7 +17,6 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Trigger that fires when a player attempts to connect to a specific server. Self-contained:
@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  * ${connection.server.players} - Collection of players on server - ${connection} - Connection event
  */
 public class ConnectionTrigger implements Trigger {
-  private static final Logger logger = LoggerFactory.getLogger(ConnectionTrigger.class);
+  private static final Logger logger = PluginLogger.get(ConnectionTrigger.class);
 
   // Injected dependencies
   private final ProxyServer proxy;

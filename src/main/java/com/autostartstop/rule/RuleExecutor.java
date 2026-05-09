@@ -1,5 +1,6 @@
 package com.autostartstop.rule;
 
+import com.autostartstop.PluginLogger;
 import com.autostartstop.action.Action;
 import com.autostartstop.action.ActionRegistry;
 import com.autostartstop.condition.ConditionEvaluator;
@@ -8,14 +9,13 @@ import com.autostartstop.context.ExecutionContext;
 import java.util.List;
 import java.util.concurrent.*;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Executes rules with their actions. Supports parallel execution of the same rule for different
  * contexts.
  */
 public class RuleExecutor {
-  private static final Logger logger = LoggerFactory.getLogger(RuleExecutor.class);
+  private static final Logger logger = PluginLogger.get(RuleExecutor.class);
 
   private final ExecutorService executorService;
   private final ActionRegistry actionRegistry;

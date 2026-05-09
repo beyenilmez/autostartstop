@@ -1,5 +1,6 @@
 package com.autostartstop.action.impl;
 
+import com.autostartstop.PluginLogger;
 import com.autostartstop.action.AbstractPlayerTargetingAction;
 import com.autostartstop.action.ActionContext;
 import com.autostartstop.action.ActionType;
@@ -13,11 +14,10 @@ import java.util.Set;
 import java.util.UUID;
 import net.kyori.adventure.bossbar.BossBar;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /** Action that hides a bossbar from one or more players. */
 public class HideBossbarAction extends AbstractPlayerTargetingAction {
-  private static final Logger logger = LoggerFactory.getLogger(HideBossbarAction.class);
+  private static final Logger logger = PluginLogger.get(HideBossbarAction.class);
 
   private final String id;
 

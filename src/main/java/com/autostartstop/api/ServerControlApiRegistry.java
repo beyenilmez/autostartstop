@@ -1,8 +1,8 @@
 package com.autostartstop.api;
 
+import com.autostartstop.PluginLogger;
 import com.autostartstop.config.ControlApiConfig;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Registry for server control API creators. Manages the creation of control APIs using static
@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ServerControlApiRegistry {
 
-  private static final Logger logger = LoggerFactory.getLogger(ServerControlApiRegistry.class);
+  private static final Logger logger = PluginLogger.get(ServerControlApiRegistry.class);
 
   public ServerControlApiRegistry() {}
 

@@ -1,5 +1,6 @@
 package com.autostartstop.server;
 
+import com.autostartstop.PluginLogger;
 import com.autostartstop.api.ServerControlApi;
 import com.autostartstop.config.PingConfig;
 import com.autostartstop.config.ServerConfig;
@@ -9,14 +10,13 @@ import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Represents a server managed by the plugin. Wraps a Velocity RegisteredServer with control
  * capabilities.
  */
 public class ManagedServer {
-  private static final Logger logger = LoggerFactory.getLogger(ManagedServer.class);
+  private static final Logger logger = PluginLogger.get(ManagedServer.class);
 
   private final String name;
   private final ServerConfig config;

@@ -2,6 +2,7 @@ package com.autostartstop;
 
 public final class Constants {
   public static final String VERSION = "{{ version }}";
+  public static final String PLUGIN_ID = "autostartstop";
 
   private Constants() {}
 }

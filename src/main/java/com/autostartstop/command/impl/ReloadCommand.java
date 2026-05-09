@@ -1,16 +1,16 @@
 package com.autostartstop.command.impl;
 
+import com.autostartstop.PluginLogger;
 import com.autostartstop.command.SubCommand;
 import com.autostartstop.util.MiniMessageUtil;
 import com.velocitypowered.api.command.CommandSource;
 import java.util.Collections;
 import java.util.List;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /** Subcommand for reloading the plugin configuration. */
 public class ReloadCommand implements SubCommand {
-  private static final Logger logger = LoggerFactory.getLogger(ReloadCommand.class);
+  private static final Logger logger = PluginLogger.get(ReloadCommand.class);
   private static final String PERMISSION = "autostartstop.command.reload";
 
   private final Runnable reloadAction;

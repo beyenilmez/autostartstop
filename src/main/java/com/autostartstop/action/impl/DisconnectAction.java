@@ -1,5 +1,6 @@
 package com.autostartstop.action.impl;
 
+import com.autostartstop.PluginLogger;
 import com.autostartstop.action.AbstractPlayerTargetingAction;
 import com.autostartstop.action.ActionContext;
 import com.autostartstop.action.ActionType;
@@ -12,11 +13,10 @@ import java.util.List;
 import java.util.Set;
 import net.kyori.adventure.text.Component;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /** Action that disconnects one or more players from the proxy. */
 public class DisconnectAction extends AbstractPlayerTargetingAction {
-  private static final Logger logger = LoggerFactory.getLogger(DisconnectAction.class);
+  private static final Logger logger = PluginLogger.get(DisconnectAction.class);
 
   private final String reason;
 

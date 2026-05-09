@@ -42,17 +42,16 @@ import java.nio.file.Path;
 import java.time.Duration;
 import org.bstats.velocity.Metrics;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Plugin(
-    id = "autostartstop",
+    id = Constants.PLUGIN_ID,
     name = "AutoStartStop",
     version = Constants.VERSION,
     url = "https://github.com/beyenilmez/autostartstop",
     authors = {"beyenilmez"},
     description = "Automated server management with rule-based triggers and actions")
 public class AutoStartStop {
-  private static final Logger logger = LoggerFactory.getLogger(AutoStartStop.class);
+  private final Logger logger;
 
   private final ProxyServer proxy;
   private final Path dataDirectory;
@@ -86,10 +85,12 @@ public class AutoStartStop {
   @Inject
   public AutoStartStop(
       ProxyServer proxy,
+      Logger logger,
       @DataDirectory Path dataDirectory,
       PluginContainer pluginContainer,
       Metrics.Factory metricsFactory) {
     this.proxy = proxy;
+    this.logger = logger;
     this.dataDirectory = dataDirectory;
     this.pluginContainer = pluginContainer;
     this.metricsFactory = metricsFactory;
