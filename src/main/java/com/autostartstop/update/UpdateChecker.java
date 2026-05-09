@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 import org.kohsuke.github.GHRelease;
@@ -62,6 +63,22 @@ public class UpdateChecker {
           }
         },
         executor);
+  }
+
+  /** Shuts down the update checker executor. Should be called during plugin shutdown. */
+  public static void shutdown() {
+    logger.debug("Shutting down update checker executor...");
+    executor.shutdown();
+    try {
+      if (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
+        logger.debug("Update checker executor did not terminate gracefully, forcing shutdown");
+        executor.shutdownNow();
+      }
+    } catch (InterruptedException e) {
+      executor.shutdownNow();
+      Thread.currentThread().interrupt();
+    }
+    logger.debug("Update checker executor shut down");
   }
 
   private Optional<UpdateInfo> fetchLatestRelease() {

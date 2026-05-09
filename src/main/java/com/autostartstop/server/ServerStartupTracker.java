@@ -6,9 +6,11 @@ import com.autostartstop.config.StartupTimerConfig;
 import com.autostartstop.util.DurationUtil;
 import java.time.Duration;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 
 /**
@@ -26,6 +28,18 @@ public class ServerStartupTracker {
 
   // Map of server name -> active startup context
   private final Map<String, ServerStartupContext> activeStartups = new ConcurrentHashMap<>();
+
+  private static final AtomicInteger threadCounter = new AtomicInteger(0);
+
+  /** Dedicated pool for background startup monitors so they can be interrupted on shutdown. */
+  private final ExecutorService monitorExecutor =
+      Executors.newCachedThreadPool(
+          r -> {
+            Thread t = new Thread(r);
+            t.setName("autostartstop-startup-monitor-" + threadCounter.incrementAndGet());
+            t.setDaemon(true);
+            return t;
+          });
 
   private final ServerManager serverManager;
   private final StartupTimeTracker startupTimeTracker;
@@ -60,7 +74,7 @@ public class ServerStartupTracker {
    * online or times out.
    */
   private void startBackgroundMonitor(String serverName) {
-    CompletableFuture.runAsync(
+    monitorExecutor.execute(
         () -> {
           long startTime = System.currentTimeMillis();
           logger.debug("ServerStartupTracker: background monitor started for '{}'", serverName);
@@ -208,6 +222,25 @@ public class ServerStartupTracker {
   public void clearStartup(String serverName) {
     activeStartups.remove(serverName);
     logger.debug("Cleared startup tracking for '{}'", serverName);
+  }
+
+  /**
+   * Cancels all in-flight background monitors and clears active startup state. Should be called
+   * during plugin shutdown. Monitors observe interruption via their existing InterruptedException
+   * handler and exit promptly.
+   */
+  public void shutdown() {
+    logger.debug("Shutting down startup monitors ({} active)...", activeStartups.size());
+    activeStartups.clear();
+    monitorExecutor.shutdownNow();
+    try {
+      if (!monitorExecutor.awaitTermination(5, TimeUnit.SECONDS)) {
+        logger.debug("Startup monitor executor did not terminate within 5s");
+      }
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+    }
+    logger.debug("Startup monitors shut down");
   }
 
   /**

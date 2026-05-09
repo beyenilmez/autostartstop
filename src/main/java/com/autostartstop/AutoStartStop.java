@@ -4,6 +4,7 @@ import com.autostartstop.action.ActionContext;
 import com.autostartstop.action.ActionRegistry;
 import com.autostartstop.api.ServerControlApiRegistry;
 import com.autostartstop.api.impl.AmpServerControlApi;
+import com.autostartstop.api.impl.PterodactylServerControlApi;
 import com.autostartstop.command.CommandManager;
 import com.autostartstop.command.impl.ReloadCommand;
 import com.autostartstop.command.impl.TriggerCommand;
@@ -193,6 +194,11 @@ public class AutoStartStop {
       logger.debug("All rules deactivated");
     }
 
+    // Cancel any in-flight server startup monitors
+    if (serverStartupTracker != null) {
+      serverStartupTracker.shutdown();
+    }
+
     // Unregister commands
     if (commandManager != null) {
       logger.debug("Unregistering commands...");
@@ -204,9 +210,14 @@ public class AutoStartStop {
     logger.debug("Shutting down command executor...");
     CommandExecutor.shutdown();
 
-    // Shutdown AMP API executor
+    // Shutdown control API executors
     logger.debug("Shutting down AMP API executor...");
     AmpServerControlApi.shutdown();
+    logger.debug("Shutting down Pterodactyl API executor...");
+    PterodactylServerControlApi.shutdown();
+
+    // Shutdown update checker executor
+    UpdateChecker.shutdown();
 
     logger.info("AutoStartStop disabled");
   }
