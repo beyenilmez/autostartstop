@@ -44,7 +44,7 @@ import org.bstats.velocity.Metrics;
 import org.slf4j.Logger;
 
 @Plugin(
-    id = "autostartstop",
+    id = Constants.PLUGIN_ID,
     name = "AutoStartStop",
     version = Constants.VERSION,
     url = "https://github.com/beyenilmez/autostartstop",
