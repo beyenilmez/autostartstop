@@ -1,22 +1,24 @@
 package com.autostartstop.update;
 
 import com.autostartstop.PluginLogger;
-import java.util.Iterator;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.kohsuke.github.GHRelease;
-import org.kohsuke.github.GHRepository;
-import org.kohsuke.github.GitHub;
 import org.slf4j.Logger;
 
 /**
- * Checks GitHub releases for newer plugin versions and notifies when an update is available. Uses
- * the hub4j github-api library for API access.
+ * Checks the project's build.gradle.kts on the main branch for a newer plugin version and notifies
+ * when an update is available.
  */
 public class UpdateChecker {
   private static final Logger logger = PluginLogger.get(UpdateChecker.class);
@@ -24,7 +26,11 @@ public class UpdateChecker {
       "https://github.com/beyenilmez/autostartstop/releases";
   private static final String MODRINTH = "https://modrinth.com/plugin/autostartstop";
   private static final String HANGAR = "https://hangar.papermc.io/beyenilmez/AutoStartStop";
-  private static final String REPO = "beyenilmez/autostartstop";
+  private static final String BUILD_GRADLE_URL =
+      "https://raw.githubusercontent.com/beyenilmez/autostartstop/refs/heads/main/build.gradle.kts";
+  private static final Pattern VERSION_PATTERN =
+      Pattern.compile("^\\s*version\\s*=\\s*\"([^\"]+)\"", Pattern.MULTILINE);
+  private static final Duration HTTP_TIMEOUT = Duration.ofSeconds(10);
 
   private static final AtomicInteger threadCounter = new AtomicInteger(0);
   private static final ExecutorService executor =
@@ -50,8 +56,8 @@ public class UpdateChecker {
     CompletableFuture.runAsync(
         () -> {
           try {
-            Optional<UpdateInfo> latest = fetchLatestRelease();
-            if (latest.isPresent() && isNewer(latest.get().getTagName(), currentVersion)) {
+            Optional<String> latest = fetchLatestVersion();
+            if (latest.isPresent() && isNewer(latest.get(), currentVersion)) {
               logUpdateAvailable(latest.get());
             }
           } catch (Exception e) {
@@ -81,34 +87,50 @@ public class UpdateChecker {
     logger.debug("Update checker executor shut down");
   }
 
-  private Optional<UpdateInfo> fetchLatestRelease() {
-    try {
-      GitHub github = GitHub.connectAnonymously();
-      GHRepository repo = github.getRepository(REPO);
-      Iterator<GHRelease> it = repo.listReleases().iterator();
-      if (it.hasNext()) {
-        GHRelease release = it.next();
-        String tagName = release.getTagName();
-        if (tagName != null && !tagName.isEmpty()) {
-          return Optional.of(new UpdateInfo(tagName));
-        }
+  private Optional<String> fetchLatestVersion() {
+    try (HttpClient client =
+        HttpClient.newBuilder()
+            .connectTimeout(HTTP_TIMEOUT)
+            .followRedirects(HttpClient.Redirect.NORMAL)
+            .build()) {
+      HttpRequest request =
+          HttpRequest.newBuilder(URI.create(BUILD_GRADLE_URL))
+              .timeout(HTTP_TIMEOUT)
+              .header("Accept", "text/plain")
+              .GET()
+              .build();
+      HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+      if (response.statusCode() != 200) {
+        logger.debug("Update check returned HTTP {}", response.statusCode());
+        return Optional.empty();
       }
-      return Optional.empty();
+      return parseVersion(response.body());
     } catch (Exception e) {
-      logger.debug("Failed to fetch releases: {}", e.getMessage());
+      logger.debug("Failed to fetch build.gradle.kts: {}", e.getMessage());
       return Optional.empty();
     }
   }
 
-  private void logUpdateAvailable(UpdateInfo info) {
-    String latest = info.getTagName();
-    String currentDisplay = currentVersion.startsWith("v") ? currentVersion : "v" + currentVersion;
-    if (!latest.startsWith("v")) {
-      latest = "v" + latest;
+  static Optional<String> parseVersion(String buildScript) {
+    if (buildScript == null || buildScript.isEmpty()) {
+      return Optional.empty();
     }
+    Matcher m = VERSION_PATTERN.matcher(buildScript);
+    if (m.find()) {
+      String version = m.group(1).trim();
+      if (!version.isEmpty()) {
+        return Optional.of(version);
+      }
+    }
+    return Optional.empty();
+  }
+
+  private void logUpdateAvailable(String latest) {
+    String currentDisplay = currentVersion.startsWith("v") ? currentVersion : "v" + currentVersion;
+    String latestDisplay = latest.startsWith("v") ? latest : "v" + latest;
     logger.info(" ");
     logger.info(" ========== AutoStartStop Update Available ==========");
-    logger.info(" {} (current) -> {} (latest)", currentDisplay, latest);
+    logger.info(" {} (current) -> {} (latest)", currentDisplay, latestDisplay);
     logger.info(" GitHub:   {}", GITHUB_RELEASES);
     logger.info(" Modrinth: {}", MODRINTH);
     logger.info(" Hangar:   {}", HANGAR);
@@ -189,18 +211,6 @@ public class UpdateChecker {
       return Integer.parseInt(s.substring(0, i));
     } catch (NumberFormatException e) {
       return 0;
-    }
-  }
-
-  private static final class UpdateInfo {
-    private final String tagName;
-
-    UpdateInfo(String tagName) {
-      this.tagName = tagName;
-    }
-
-    String getTagName() {
-      return tagName;
     }
   }
 }
