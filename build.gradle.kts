@@ -73,25 +73,41 @@ spotless {
 
 tasks {
     test {
-        useJUnitPlatform()
+        useJUnitPlatform {
+            if (project.hasProperty("fastTests")) {
+                excludeTags("velocity-boot")
+            }
+        }
+        // VelocityBootIT boots a real Velocity proxy with the relocated jar.
+        dependsOn(shadowJar)
+        systemProperty(
+            "autostartstop.jar",
+            shadowJar.get().archiveFile.get().asFile.absolutePath
+        )
+        // Integration tests touch external resources (PaperMC API + on-disk velocity-cache)
+        // that Gradle can't snapshot, so its UP-TO-DATE check would silently skip real
+        // execution. Force re-run unless the user opts out of integration tests.
+        if (!project.hasProperty("fastTests")) {
+            outputs.upToDateWhen { false }
+        }
     }
-    
+
     withType<JavaCompile>().configureEach {
         options.encoding = "UTF-8"
     }
-    
+
     shadowJar {
         archiveFileName = "${project.name}-${project.version}.jar"
         archiveClassifier = ""
-        
+
         // Relocate to avoid conflicts with other plugins
         relocate("org.bstats", "${project.group}.bstats")
     }
-    
+
     jar {
         enabled = false
     }
-    
+
     build {
         dependsOn(shadowJar)
     }
