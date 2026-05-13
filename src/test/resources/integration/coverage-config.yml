@@ -1,0 +1,79 @@
+# ============================================================================
+# Integration test coverage config.
+#
+# Forces the plugin to register an event subscription for every supported
+# trigger type during boot, so VelocityBootIT catches breaking changes in any
+# Velocity event class (LoginEvent, ProxyPingEvent, etc.) — not just the
+# ProxyInitializeEvent that the plugin's main class subscribes to directly.
+#
+# cov_proxy_start uses a `log` action with a fixed message so we can assert that
+# the proxy_start trigger's full path (trigger -> rule executor -> action
+# execution) actually runs.
+# ============================================================================
+
+version: 1
+
+settings:
+  shutdown_timeout: 5s
+  check_for_updates: false
+
+servers: {}
+
+rules:
+  cov_proxy_start:
+    enabled: true
+    triggers:
+      - proxy_start:
+    action:
+      - log:
+          message: "coverage:proxy_start"
+
+  cov_proxy_shutdown:
+    enabled: true
+    triggers:
+      - proxy_shutdown:
+    action:
+      - log:
+          message: "coverage:proxy_shutdown"
+
+  cov_connection:
+    enabled: true
+    triggers:
+      - connection:
+    action:
+      - log:
+          message: "coverage:connection"
+
+  cov_empty_server:
+    enabled: true
+    triggers:
+      - empty_server:
+    action:
+      - log:
+          message: "coverage:empty_server"
+
+  cov_cron:
+    enabled: true
+    triggers:
+      - cron:
+          expression: "0 0 * * *"
+    action:
+      - log:
+          message: "coverage:cron"
+
+  cov_ping:
+    enabled: true
+    triggers:
+      - ping:
+    action:
+      - log:
+          message: "coverage:ping"
+
+  cov_manual:
+    enabled: true
+    triggers:
+      - manual:
+          id: "cov_test"
+    action:
+      - log:
+          message: "coverage:manual"

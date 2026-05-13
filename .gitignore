@@ -78,3 +78,4 @@ runs/
 modrinth_token.txt
 hangar_api_key.txt
 docs/site/
+bin/
