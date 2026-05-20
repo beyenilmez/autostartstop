@@ -19,7 +19,7 @@ mockito = "5.23.0"
 
 # Plugins
 shadow = "9.4.1"
-spotless = "8.4.0"
+spotless = "8.5.1"
 blossom = "2.2.0"
 
 [libraries]
