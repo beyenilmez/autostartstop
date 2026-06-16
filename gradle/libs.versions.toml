@@ -14,12 +14,12 @@ gson = "2.14.0"
 bstats = "3.2.1"
 
 # Testing
-junit = "6.0.3"
+junit = "6.1.0"
 mockito = "5.23.0"
 
 # Plugins
-shadow = "9.4.1"
-spotless = "8.5.1"
+shadow = "9.4.2"
+spotless = "8.7.0"
 blossom = "2.2.0"
 
 [libraries]

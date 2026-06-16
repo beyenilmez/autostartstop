@@ -24,7 +24,7 @@ The following libraries are used for testing:
 
 | Library | Version | Description | License |
 |---------|---------|-------------|---------|
-| [JUnit Jupiter](https://github.com/junit-team/junit5) | 6.0.3 <!-- renovate: datasource=maven depName=org.junit.jupiter:junit-jupiter --> | Unit testing framework for Java | EPL-2.0 |
+| [JUnit Jupiter](https://github.com/junit-team/junit5) | 6.1.0 <!-- renovate: datasource=maven depName=org.junit.jupiter:junit-jupiter --> | Unit testing framework for Java | EPL-2.0 |
 | [Mockito](https://github.com/mockito/mockito) | 5.23.0 <!-- renovate: datasource=maven depName=org.mockito:mockito-core --> | Mocking framework for unit tests | MIT |
 
 ## Documentation Tools
