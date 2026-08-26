@@ -3,7 +3,7 @@
 java = "21"
 
 # Velocity
-velocity = "3.4.0"
+velocity = "4.1.1"
 
 # Libraries
 boostedYaml = "1.3.7"
